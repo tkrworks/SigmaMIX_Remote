@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="SIGMA_MIX_SERVICE_UUID">d6cd96b8-a739-41e5-bacc-909cdbbc45d8</string>
+
+  <string name="XF_SETTING_CHARACTERISTIC_UUID">65775261-2d80-49d1-9620-fa22bda727c5</string>
+  <string name="IF_SETTING_CHARACTERISTIC_UUID">a257e2e9-5d24-40b3-a536-dc413fcebf79</string>
+  <string name="LINE_PHONO_SW_CHARACTERISTIC_UUID">72fab72f-34e9-46ae-b2af-8f12420c9315</string>
+  <string name="IN_GAIN_CHARACTERISTIC_UUID">21fab7c9-7208-4b64-8f18-e99689dd479d</string>
+  <string name="EQ_HI_CHARACTERISTIC_UUID">cde93457-0e92-461b-bca2-bcd2b41753c3</string>
+  <string name="EQ_MID_CHARACTERISTIC_UUID">b759ac9e-f274-4ea6-82d4-eded7fd1ba6b</string>
+  <string name="EQ_LOW_CHARACTERISTIC_UUID">ef34940a-c6dd-4832-9643-7798061029d9</string>
+  <string name="IFADER_CHARACTERISTIC_UUID">815f1b0a-78f5-4162-b60e-517705106362</string>
+  <string name="MASTER_BOOTH_GAIN_CHARACTERISTIC_UUID">9f5c0ec8-006e-4c1a-bc03-092a38ea0134</string>
+  <string name="MONITOR_SETTING_CHARACTERISTIC_UUID">cc3d79bf-4dc0-498d-92d8-210af7ddb13f</string>
+</resources>
