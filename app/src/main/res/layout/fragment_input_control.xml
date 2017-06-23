@@ -108,8 +108,8 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:padding="30dp"
-        seekarc:max="4095"
-        seekarc:progress="2048"
+        seekarc:max="255"
+        seekarc:progress="127"
         seekarc:rotation="180"
         seekarc:startAngle="30"
         seekarc:sweepAngle="300"/>
@@ -125,8 +125,8 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:padding="30dp"
-        seekarc:max="4095"
-        seekarc:progress="2048"
+        seekarc:max="255"
+        seekarc:progress="127"
         seekarc:rotation="180"
         seekarc:startAngle="30"
         seekarc:sweepAngle="300"/>

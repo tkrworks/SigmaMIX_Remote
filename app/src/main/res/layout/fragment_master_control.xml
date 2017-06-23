@@ -67,6 +67,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:padding="30dp"
+        seekarc:max="255"
         seekarc:rotation="180"
         seekarc:startAngle="30"
         seekarc:sweepAngle="300"/>
@@ -81,6 +82,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:padding="30dp"
+        seekarc:max="255"
         seekarc:rotation="180"
         seekarc:startAngle="30"
         seekarc:sweepAngle="300"/>
@@ -147,6 +149,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:padding="30dp"
+        seekarc:max="255"
         seekarc:rotation="180"
         seekarc:startAngle="30"
         seekarc:sweepAngle="300"/>
@@ -162,6 +165,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:padding="30dp"
+        seekarc:max="255"
         seekarc:rotation="180"
         seekarc:startAngle="30"
         seekarc:sweepAngle="300"/>
