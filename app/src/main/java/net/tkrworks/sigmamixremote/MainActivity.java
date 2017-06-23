@@ -26,6 +26,7 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.ParcelUuid;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
@@ -60,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
   private BluetoothGattCharacteristic m3BandEqLowCharacteristic;
   private BluetoothGattCharacteristic mInputFaderCharacteristic;
   private BluetoothGattCharacteristic mMasterBoothGainCharacteristic;
-  private BluetoothGattCharacteristic mMonitorLevelSelectCharacteristic;
+  private BluetoothGattCharacteristic mMonitorSelectLevelCharacteristic;
 
   private List<String> mSigmaMixNameList = new ArrayList<>();
   private List<BluetoothDevice> mSigmaMixBdList = new ArrayList<>();
@@ -137,7 +138,7 @@ public class MainActivity extends AppCompatActivity {
 
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
-    int id = item.getItemId();
+    //int id = item.getItemId();
     //if (id == R.id.action_settings) {
     //  return true;
     //}
@@ -225,8 +226,8 @@ public class MainActivity extends AppCompatActivity {
   }
 
   @Override
-  public void onRequestPermissionsResult(int requestCode, String[] permissions,
-      int[] grantResults) {
+  public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+      @NonNull int[] grantResults) {
     if (requestCode == 1) {
       if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
         Log.d("PERMISSION", "Succeeded");
@@ -280,6 +281,169 @@ public class MainActivity extends AppCompatActivity {
     mBleScanner.stopScan(mBleScanCallback);
   }
 
+  void switchLinePhono(boolean ch1_sw, boolean ch2_sw) {
+    byte[] value = new byte[1];
+
+    value[0] = (byte)((((ch1_sw ? 1 : 0) << 4) & 0xF0) | ((ch2_sw ? 1 : 0) & 0x0F));
+
+    MyLog.d("DEBUG", "Line/Phono = %d(%b,%b)", value[0], ch1_sw, ch2_sw);
+
+    if (isConnectedBLE) {
+      mLinePhonoSwitchCharacteristic.setValue(value);
+      mBleGatt.writeCharacteristic(mLinePhonoSwitchCharacteristic);
+    }
+  }
+
+  void adjustInputGain(int ch1_value, int ch2_value) {
+    byte[] value = new byte[6];
+    value[5] = (byte)((ch1_value >> 16) & 0xFF);
+    value[4] = (byte)((ch1_value >> 8) & 0xFF);
+    value[3] = (byte)(ch1_value & 0xFF);
+    value[2] = (byte)((ch2_value >> 16) & 0xFF);
+    value[1] = (byte)((ch2_value >> 8) & 0xFF);
+    value[0] = (byte)(ch2_value & 0xFF);
+
+    MyLog.d("DEBUG", "InputGain = %d:[%02x, %02x, %02x] %d:[%02x, %02x, %02x]", ch1_value, value[5], value[4], value[3], ch2_value, value[2], value[1], value[0]);
+
+    if (isConnectedBLE) {
+      mInputGainCharacteristic.setValue(value);
+      mBleGatt.writeCharacteristic(mInputGainCharacteristic);
+    }
+  }
+
+  void adjust3BandEqHi(int ch1_value, int ch2_value) {
+    byte[] value = new byte[6];
+    value[5] = (byte)((ch1_value >> 16) & 0xFF);
+    value[4] = (byte)((ch1_value >> 8) & 0xFF);
+    value[3] = (byte)(ch1_value & 0xFF);
+    value[2] = (byte)((ch2_value >> 16) & 0xFF);
+    value[1] = (byte)((ch2_value >> 8) & 0xFF);
+    value[0] = (byte)(ch2_value & 0xFF);
+
+    MyLog.d("DEBUG", "3Band EQ Hi = %d:[%02x, %02x, %02x] %d:[%02x, %02x, %02x]", ch1_value, value[5], value[4], value[3], ch2_value, value[2], value[1], value[0]);
+
+    if (isConnectedBLE) {
+      m3BandEqHiCharacteristic.setValue(value);
+      mBleGatt.writeCharacteristic(m3BandEqHiCharacteristic);
+    }
+  }
+
+  void adjust3BandEqMid(int ch1_value, int ch2_value) {
+    byte[] value = new byte[6];
+    value[5] = (byte)((ch1_value >> 16) & 0xFF);
+    value[4] = (byte)((ch1_value >> 8) & 0xFF);
+    value[3] = (byte)(ch1_value & 0xFF);
+    value[2] = (byte)((ch2_value >> 16) & 0xFF);
+    value[1] = (byte)((ch2_value >> 8) & 0xFF);
+    value[0] = (byte)(ch2_value & 0xFF);
+
+    MyLog.d("DEBUG", "3Band EQ Mid = %d:[%02x, %02x, %02x] %d:[%02x, %02x, %02x]", ch1_value, value[5], value[4], value[3], ch2_value, value[2], value[1], value[0]);
+
+    if (isConnectedBLE) {
+      m3BandEqMidCharacteristic.setValue(value);
+      mBleGatt.writeCharacteristic(m3BandEqMidCharacteristic);
+    }
+  }
+
+  void adjust3BandEqLow(int ch1_value, int ch2_value) {
+    byte[] value = new byte[6];
+    value[5] = (byte)((ch1_value >> 16) & 0xFF);
+    value[4] = (byte)((ch1_value >> 8) & 0xFF);
+    value[3] = (byte)(ch1_value & 0xFF);
+    value[2] = (byte)((ch2_value >> 16) & 0xFF);
+    value[1] = (byte)((ch2_value >> 8) & 0xFF);
+    value[0] = (byte)(ch2_value & 0xFF);
+
+    MyLog.d("DEBUG", "3Band EQ Low = %d:[%02x, %02x, %02x] %d:[%02x, %02x, %02x]", ch1_value, value[5], value[4], value[3], ch2_value, value[2], value[1], value[0]);
+
+    if (isConnectedBLE) {
+      m3BandEqLowCharacteristic.setValue(value);
+      mBleGatt.writeCharacteristic(m3BandEqLowCharacteristic);
+    }
+  }
+
+  void adjustVolume(int ch1_value, int ch2_value) {
+    byte[] value = new byte[6];
+    value[5] = (byte)((ch1_value >> 16) & 0xFF);
+    value[4] = (byte)((ch1_value >> 8) & 0xFF);
+    value[3] = (byte)(ch1_value & 0xFF);
+    value[2] = (byte)((ch2_value >> 16) & 0xFF);
+    value[1] = (byte)((ch2_value >> 8) & 0xFF);
+    value[0] = (byte)(ch2_value & 0xFF);
+
+    MyLog.d("DEBUG", "Input Fader Volume = %d:[%02x, %02x, %02x] %d:[%02x, %02x, %02x]", ch1_value, value[5], value[4], value[3], ch2_value, value[2], value[1], value[0]);
+
+    if (isConnectedBLE) {
+      mInputFaderCharacteristic.setValue(value);
+      mBleGatt.writeCharacteristic(mInputFaderCharacteristic);
+    }
+  }
+
+  void adjustIFaderSetting(boolean rev, int curve) {
+    byte[] value = new byte[1];
+    value[0] = (byte)(((rev ? 1: 0) << 4) | (curve & 0x0F));
+
+    MyLog.d("DEBUG", "IFader Setting = %02x(%b,%d)", value[0], rev, curve);
+
+    if (isConnectedBLE) {
+      mIFaderSettingCharacteristic.setValue(value);
+      mBleGatt.writeCharacteristic(mIFaderSettingCharacteristic);
+    }
+  }
+
+  void adjustXFaderSetting(boolean rev, int curve) {
+    byte[] value = new byte[1];
+    value[0] = (byte)(((rev ? 1: 0) << 4) | (curve & 0x0F));
+
+    MyLog.d("DEBUG", "XFader Setting = %02x(%b,%d)", value[0], rev, curve);
+
+    if (isConnectedBLE) {
+      mXFaderSettingCharacteristic.setValue(value);
+      mBleGatt.writeCharacteristic(mXFaderSettingCharacteristic);
+    }
+  }
+
+  void adjustMasterBoothGain(int master_value, int booth_value) {
+    byte[] value = new byte[6];
+    value[5] = (byte)((master_value >> 16) & 0xFF);
+    value[4] = (byte)((master_value >> 8) & 0xFF);
+    value[3] = (byte)(master_value & 0xFF);
+    value[2] = (byte)((booth_value >> 16) & 0xFF);
+    value[1] = (byte)((booth_value >> 8) & 0xFF);
+    value[0] = (byte)(booth_value & 0xFF);
+
+    MyLog.d("DEBUG", "Master/Booth Gain = %d:[%02x, %02x, %02x] %d:[%02x, %02x, %02x]", master_value, value[5], value[4], value[3], booth_value, value[2], value[1], value[0]);
+
+    if (isConnectedBLE) {
+      mMasterBoothGainCharacteristic.setValue(value);
+      mBleGatt.writeCharacteristic(mMasterBoothGainCharacteristic);
+    }
+  }
+
+  void adjustMonitorSelectLevel(int select_value, int level_value) {
+    byte[] value = new byte[6];
+    value[5] = (byte)((select_value >> 16) & 0xFF);
+    value[4] = (byte)((select_value >> 8) & 0xFF);
+    value[3] = (byte)(select_value & 0xFF);
+    value[2] = (byte)((level_value >> 16) & 0xFF);
+    value[1] = (byte)((level_value >> 8) & 0xFF);
+    value[0] = (byte)(level_value & 0xFF);
+
+    MyLog.d("DEBUG", "Monitor Select/Level = %d:[%02x, %02x, %02x] %d:[%02x, %02x, %02x]", select_value, value[5], value[4], value[3], level_value, value[2], value[1], value[0]);
+
+    if (isConnectedBLE) {
+      mMonitorSelectLevelCharacteristic.setValue(value);
+      mBleGatt.writeCharacteristic(mMonitorSelectLevelCharacteristic);
+    }
+  }
+
+  /*
+  mXFaderSettingCharacteristic;
+  mIFaderSettingCharacteristic;
+
+  mInputFaderCharacteristic;
+  */
+
   private final BluetoothGattCallback mBleGattCallback = new BluetoothGattCallback() {
     @Override
     public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
@@ -300,7 +464,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (gatt != null) {
           gatt.close();
-          gatt = null;
+          //gatt = null;
         }
 
         isConnectedBLE = false;
@@ -331,6 +495,8 @@ public class MainActivity extends AppCompatActivity {
                   mXFaderSettingCharacteristic = characteristic;
                 } else if (getString(R.string.IF_SETTING_CHARACTERISTIC_UUID).equals(characteristic.getUuid().toString())) {
                   mIFaderSettingCharacteristic = characteristic;
+                } else if (getString(R.string.LINE_PHONO_SW_CHARACTERISTIC_UUID).equals(characteristic.getUuid().toString())) {
+                  mLinePhonoSwitchCharacteristic = characteristic;
                 } else if (getString(R.string.IN_GAIN_CHARACTERISTIC_UUID).equals(characteristic.getUuid().toString())) {
                   mInputGainCharacteristic = characteristic;
                 } else if (getString(R.string.EQ_HI_CHARACTERISTIC_UUID).equals(characteristic.getUuid().toString())) {
@@ -344,150 +510,11 @@ public class MainActivity extends AppCompatActivity {
                 } else if (getString(R.string.MASTER_BOOTH_GAIN_CHARACTERISTIC_UUID).equals(characteristic.getUuid().toString())) {
                   mMasterBoothGainCharacteristic = characteristic;
                 } else if (getString(R.string.MONITOR_SETTING_CHARACTERISTIC_UUID).equals(characteristic.getUuid().toString())) {
-                  mMonitorLevelSelectCharacteristic = characteristic;
+                  mMonitorSelectLevelCharacteristic = characteristic;
                 }
               }
             }
           }
-
-          /*
-          else if(AIRP_SERVICE_UUID.equals(service.getUuid().toString())) {
-            airp_service = gatt.getService(service.getUuid());
-
-            if(airp_service != null) {
-              List<BluetoothGattCharacteristic> characteristics = airp_service.getCharacteristics();
-              for(BluetoothGattCharacteristic characteristic : characteristics) {
-                Log.d("DEBUG", "  AIRP CHARACTERISTIC: " + characteristic.getUuid());
-
-                if(AIRP_CHAR_UUID.equals(characteristic.getUuid().toString())) {
-                  airp_characteristic = characteristic;
-
-                  boolean notify_registered = gatt.setCharacteristicNotification(characteristic, true);
-                  if(notify_registered)
-                    Log.d("DEBUG", "characteristic notification: SUCCESS");
-                  else
-                    Log.d("DEBUG", "characteristic notification: FAILURE");
-
-                  List<BluetoothGattDescriptor> descriptors = characteristic.getDescriptors();
-                  for(BluetoothGattDescriptor descriptor : descriptors) {
-                    Log.d("DEBUG", "DESCRIPTOR: " + descriptor.getUuid());
-
-                    if(CHARACTERISTIC_CONFIG_UUID2.equals(descriptor.getUuid().toString())) {
-                      if((characteristic.getProperties() & BluetoothGattCharacteristic.PROPERTY_NOTIFY) != 0) {
-                        if(descriptor != null) {
-                          Log.d("DEBUG", "Characteristic (" + characteristic.getUuid() + ") is NOTIFY");
-
-                          descriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
-                          boolean desc_flag = gatt.writeDescriptor(descriptor);
-                          if(desc_flag) {
-                            Log.d("DEBUG", "write descriptor is OK.");
-                          }
-                          else
-                            Log.d("DEBUG", "write descriptor is NG.");
-                        }
-                      }
-                    }
-                    else if((characteristic.getProperties() & BluetoothGattCharacteristic.PROPERTY_INDICATE) != 0) {
-                      if(descriptor != null) {
-                        Log.d("DEBUG", "Characteristic (" + characteristic.getUuid() + ") is INDICATE");
-
-                        descriptor.setValue(BluetoothGattDescriptor.ENABLE_INDICATION_VALUE);
-                        boolean desc_flag = gatt.writeDescriptor(descriptor);
-                        if(desc_flag) {
-                          Log.d("DEBUG", "write descriptor is OK.");
-                        }
-                        else
-                          Log.d("DEBUG", "write descriptor is NG.");
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-          */
-
-          /*
-          if(I2C_SERVICE_UUID.equals(service.getUuid().toString())) {
-            sensor_service = gatt.getService(service.getUuid());
-
-            if(sensor_service != null) {
-              List<BluetoothGattCharacteristic> characteristics = sensor_service.getCharacteristics();
-              for(BluetoothGattCharacteristic characteristic : characteristics) {
-                Log.d("DEBUG", "CHARACTERISTIC: " + characteristic.getUuid());
-
-                if(SENSOR_TEST_CHAR_UUID.equals(characteristic.getUuid().toString())) {
-                  //Log.d("BLE", "MEME : CUSTOM 1 " + characteristic.getUuid());
-
-                  sensor_test_characteristic = characteristic;
-                }
-                else if(SENSOR_CONFIG_CHAR_UUID.equals(characteristic.getUuid().toString())) {
-                  //Log.d("BLE", "MEME : CUSTOM 1 " + characteristic.getUuid());
-
-                  sensor_config_characteristic = characteristic;
-                }
-                else if(SENSOR_ENABLE_CHAR_UUID.equals(characteristic.getUuid().toString())) {
-                  //Log.d("BLE", "MEME : CUSTOM 2 " + characteristic.getUuid());
-
-                  sensor_enable_characteristic = characteristic;
-                }
-                else if(SENSOR_RAW_CHAR_UUID.equals(characteristic.getUuid().toString())) {
-                  //Log.d("BLE", "MEME : CUSTOM 2 " + characteristic.getUuid());
-
-                  sensor_raw_characteristic = characteristic;
-                }
-                else if(MAGNET_CONFIG_UUID.equals(characteristic.getUuid().toString())) {
-                  magnet_config_characteristic = characteristic;
-                }
-                else if(MAGNET_SENSITIVITY_UUID.equals(characteristic.getUuid().toString())) {
-                  magnet_sensitivity_characteristic = characteristic;
-
-                  boolean notify_registered = gatt.setCharacteristicNotification(characteristic, true);
-                  if(notify_registered)
-                    Log.d("DEBUG", "characteristic notification: SUCCESS");
-                  else
-                    Log.d("DEBUG", "characteristic notification: FAILURE");
-
-                  List<BluetoothGattDescriptor> descriptors = characteristic.getDescriptors();
-                  for(BluetoothGattDescriptor descriptor : descriptors) {
-                    Log.d("DEBUG", "DESCRIPTOR: " + descriptor.getUuid());
-
-                    if(CHARACTERISTIC_CONFIG_UUID2.equals(descriptor.getUuid().toString())) {
-                      if((characteristic.getProperties() & BluetoothGattCharacteristic.PROPERTY_NOTIFY) != 0) {
-                        if(descriptor != null) {
-                          Log.d("DEBUG", "Characteristic (" + characteristic.getUuid() + ") is NOTIFY");
-
-                          descriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
-                          boolean desc_flag = gatt.writeDescriptor(descriptor);
-                          if(desc_flag) {
-                            Log.d("DEBUG", "write descriptor is OK.");
-                            init_flag = 1;
-                          }
-                          else
-                            Log.d("DEBUG", "write descriptor is NG.");
-                        }
-                      }
-                    }
-                    else if((characteristic.getProperties() & BluetoothGattCharacteristic.PROPERTY_INDICATE) != 0) {
-                      if(descriptor != null) {
-                        Log.d("DEBUG", "Characteristic (" + characteristic.getUuid() + ") is INDICATE");
-
-                        descriptor.setValue(BluetoothGattDescriptor.ENABLE_INDICATION_VALUE);
-                        boolean desc_flag = gatt.writeDescriptor(descriptor);
-                        if(desc_flag) {
-                          Log.d("DEBUG", "write descriptor is OK.");
-                          init_flag = 1;
-                        }
-                        else
-                          Log.d("DEBUG", "write descriptor is NG.");
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-          */
         }
       }
     }
@@ -496,6 +523,8 @@ public class MainActivity extends AppCompatActivity {
     public void onCharacteristicRead(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic,
         int status) {
       super.onCharacteristicRead(gatt, characteristic, status);
+
+      MyLog.d("DEBUG", "characteristic read");
     }
 
     @Override
@@ -503,24 +532,32 @@ public class MainActivity extends AppCompatActivity {
         BluetoothGattCharacteristic characteristic,
         int status) {
       super.onCharacteristicWrite(gatt, characteristic, status);
+
+      MyLog.d("DEBUG", "characteristic write");
     }
 
     @Override
     public void onCharacteristicChanged(BluetoothGatt gatt,
         BluetoothGattCharacteristic characteristic) {
       super.onCharacteristicChanged(gatt, characteristic);
+
+      MyLog.d("DEBUG", "characteristic changed");
     }
 
     @Override
     public void onDescriptorRead(BluetoothGatt gatt, BluetoothGattDescriptor descriptor,
         int status) {
       super.onDescriptorRead(gatt, descriptor, status);
+
+      MyLog.d("DEBUG", "descriptor read");
     }
 
     @Override
     public void onDescriptorWrite(BluetoothGatt gatt, BluetoothGattDescriptor descriptor,
         int status) {
       super.onDescriptorWrite(gatt, descriptor, status);
+
+      MyLog.d("DEBUG", "characteristic write");
     }
   };
 
