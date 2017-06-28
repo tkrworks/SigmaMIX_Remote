@@ -7,9 +7,11 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import com.triggertrap.seekarc.SeekArc;
 import com.triggertrap.seekarc.SeekArc.OnSeekArcChangeListener;
 
+import static net.tkrworks.sigmamixremote.MyTextViewControl.*;
 
 public class MasterControlFragment extends Fragment {
 
@@ -17,6 +19,10 @@ public class MasterControlFragment extends Fragment {
   private SeekArc mBoothGain;
   private SeekArc mMonitorSelect;
   private SeekArc mMonitorLevel;
+  private TextView mMasterdB;
+  private TextView mBoothdB;
+  private TextView mSelectRate;
+  private TextView mMonitordB;
 
   public MasterControlFragment() {
     // Required empty public constructor
@@ -44,6 +50,7 @@ public class MasterControlFragment extends Fragment {
       public void onProgressChanged(SeekArc seekArc, int i, boolean b) {
         //MyLog.d("DEBUG", "progress::ch1 gain = %d", i);
         ((MainActivity) getActivity()).adjustMasterBoothGain(seekArc.getProgress(), mBoothGain.getProgress());
+        setDecibel(mMasterdB, i, -120, 15);
       }
 
       @Override
@@ -55,6 +62,7 @@ public class MasterControlFragment extends Fragment {
       public void onStopTrackingTouch(SeekArc seekArc) {
         //MyLog.d("DEBUG", "stop::ch1 gain = %d", seekArc.getProgress());
         ((MainActivity) getActivity()).adjustMasterBoothGain(mMasterGain.getProgress(), mBoothGain.getProgress());
+        setDecibel(mMasterdB, seekArc.getProgress(), -120, 15);
       }
     });
 
@@ -64,6 +72,7 @@ public class MasterControlFragment extends Fragment {
       public void onProgressChanged(SeekArc seekArc, int i, boolean b) {
         //MyLog.d("DEBUG", "progress::ch1 gain = %d", i);
         ((MainActivity) getActivity()).adjustMasterBoothGain(mMasterGain.getProgress(), i);
+        setDecibel(mBoothdB, i, -120, 15);
       }
 
       @Override
@@ -75,6 +84,7 @@ public class MasterControlFragment extends Fragment {
       public void onStopTrackingTouch(SeekArc seekArc) {
         //MyLog.d("DEBUG", "stop::ch1 gain = %d", seekArc.getProgress());
         ((MainActivity) getActivity()).adjustMasterBoothGain(mMasterGain.getProgress(), mBoothGain.getProgress());
+        setDecibel(mBoothdB, seekArc.getProgress(), -120, 15);
       }
     });
 
@@ -104,6 +114,7 @@ public class MasterControlFragment extends Fragment {
       public void onProgressChanged(SeekArc seekArc, int i, boolean b) {
         //MyLog.d("DEBUG", "progress::ch1 gain = %d", i);
         ((MainActivity) getActivity()).adjustMonitorSelectLevel(mMonitorSelect.getProgress(), i);
+        setDecibel(mMonitordB, i, -120, 15);
       }
 
       @Override
@@ -115,8 +126,14 @@ public class MasterControlFragment extends Fragment {
       public void onStopTrackingTouch(SeekArc seekArc) {
         //MyLog.d("DEBUG", "stop::ch1 gain = %d", seekArc.getProgress());
         ((MainActivity) getActivity()).adjustMonitorSelectLevel(mMonitorSelect.getProgress(), mMonitorLevel.getProgress());
+        setDecibel(mMonitordB, seekArc.getProgress(), -120, 15);
       }
     });
+
+    mMasterdB = (TextView) view.findViewById(R.id.master_db);
+    mBoothdB = (TextView) view.findViewById(R.id.booth_db);
+    mSelectRate = (TextView) view.findViewById(R.id.select_rate);
+    mMonitordB = (TextView) view.findViewById(R.id.monitor_db);
   }
 
   @Override

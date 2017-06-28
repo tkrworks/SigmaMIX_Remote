@@ -10,9 +10,11 @@ import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.Switch;
+import android.widget.TextView;
 import com.triggertrap.seekarc.SeekArc;
 import com.triggertrap.seekarc.SeekArc.OnSeekArcChangeListener;
 
+import static net.tkrworks.sigmamixremote.MyTextViewControl.*;
 
 public class InputControlFragment extends Fragment {
 
@@ -20,6 +22,8 @@ public class InputControlFragment extends Fragment {
   private Switch mCh2LinePhonoSw;
   private SeekArc mCh1InputGain;
   private SeekArc mCh2InputGain;
+  private TextView mCh1dB;
+  private TextView mCh2dB;
 
   public InputControlFragment() {
     // Required empty public constructor
@@ -64,6 +68,7 @@ public class InputControlFragment extends Fragment {
       public void onProgressChanged(SeekArc seekArc, int i, boolean b) {
         //MyLog.d("DEBUG", "progress::ch1 gain = %d", i);
         ((MainActivity) getActivity()).adjustInputGain(i, mCh2InputGain.getProgress());
+        setDecibel(mCh1dB, i, -15, 15);
       }
 
       @Override
@@ -75,6 +80,7 @@ public class InputControlFragment extends Fragment {
       public void onStopTrackingTouch(SeekArc seekArc) {
         //MyLog.d("DEBUG", "stop::ch1 gain = %d", seekArc.getProgress());
         ((MainActivity) getActivity()).adjustInputGain(mCh1InputGain.getProgress(), mCh2InputGain.getProgress());
+        setDecibel(mCh1dB, mCh1InputGain.getProgress(), -15, 15);
       }
     });
 
@@ -83,6 +89,7 @@ public class InputControlFragment extends Fragment {
       @Override
       public void onProgressChanged(SeekArc seekArc, int i, boolean b) {
         ((MainActivity) getActivity()).adjustInputGain(mCh1InputGain.getProgress(), i);
+        setDecibel(mCh2dB, i, -15, 15);
       }
 
       @Override
@@ -93,8 +100,12 @@ public class InputControlFragment extends Fragment {
       @Override
       public void onStopTrackingTouch(SeekArc seekArc) {
         ((MainActivity) getActivity()).adjustInputGain(mCh1InputGain.getProgress(), mCh2InputGain.getProgress());
+        setDecibel(mCh2dB, mCh2InputGain.getProgress(), -15, 15);
       }
     });
+
+    mCh1dB = (TextView) view.findViewById(R.id.ch1_db);
+    mCh2dB = (TextView) view.findViewById(R.id.ch2_db);
   }
 
   @Override

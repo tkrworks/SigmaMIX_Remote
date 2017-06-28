@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.SeekBar;
+import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.Switch;
 import com.triggertrap.seekarc.SeekArc;
 import com.triggertrap.seekarc.SeekArc.OnSeekArcChangeListener;
@@ -43,6 +44,42 @@ public class FaderControlFragment extends Fragment {
   @Override
   public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
+
+    mCh1Volume = (SeekBar) view.findViewById(R.id.ch1_if);
+    mCh1Volume.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
+      @Override
+      public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+        ((MainActivity) getActivity()).adjustVolume(progress, mCh2Volume.getProgress());
+      }
+
+      @Override
+      public void onStartTrackingTouch(SeekBar seekBar) {
+
+      }
+
+      @Override
+      public void onStopTrackingTouch(SeekBar seekBar) {
+        ((MainActivity) getActivity()).adjustVolume(mCh1Volume.getProgress(), mCh2Volume.getProgress());
+      }
+    });
+
+    mCh2Volume = (SeekBar) view.findViewById(R.id.ch2_if);
+    mCh2Volume.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
+      @Override
+      public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+        ((MainActivity) getActivity()).adjustVolume(mCh1Volume.getProgress(), progress);
+      }
+
+      @Override
+      public void onStartTrackingTouch(SeekBar seekBar) {
+
+      }
+
+      @Override
+      public void onStopTrackingTouch(SeekBar seekBar) {
+        ((MainActivity) getActivity()).adjustVolume(mCh1Volume.getProgress(), mCh2Volume.getProgress());
+      }
+    });
 
     mIfReverse = (Switch) view.findViewById(R.id.if_rev_sw);
     mIfReverse.setOnCheckedChangeListener(new OnCheckedChangeListener() {

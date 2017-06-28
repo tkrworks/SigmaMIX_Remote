@@ -9,6 +9,17 @@
     <item name="colorAccent">@color/colorAccent</item>
 
     <item name="seekArcStyle">@style/SeekArcLight</item>
+
+    <!-- active thumb & track color (30% transparency) -->
+    <item name="colorControlActivated">#FFA000</item>
+
+    <!-- inactive thumb color -->
+    <item name="colorSwitchThumbNormal">#BDBDBD</item>
+
+    <!-- inactive track color (30% transparency) -->
+    <item name="android:colorForeground">#757575</item>
+
+    <item name="android:actionMenuTextColor">#212121</item>
   </style>
 
 </resources>

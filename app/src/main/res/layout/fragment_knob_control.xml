@@ -1,8 +1,9 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:seekarc="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
-  xmlns:seekarc="http://schemas.android.com/apk/res-auto"
+  android:background="#212121"
   tools:context="net.tkrworks.sigmamixremote.KnobControlFragment">
 
   <!-- TODO: Update blank fragment layout -->
@@ -33,7 +34,8 @@
         android:layout_weight="1"
         android:layout_gravity="bottom"
         android:text="HI"
-        android:textAlignment="textEnd"/>
+        android:textAlignment="textEnd"
+        android:textColor="#bdbdbd"/>
       <Space
         android:layout_width="0dip"
         android:layout_height="match_parent"
@@ -44,7 +46,8 @@
         android:layout_weight="1"
         android:layout_gravity="bottom"
         android:text="HI"
-        android:textAlignment="textEnd"/>
+        android:textAlignment="textEnd"
+        android:textColor="#bdbdbd"/>
       <Space
         android:layout_width="0dip"
         android:layout_height="match_parent"
@@ -60,34 +63,64 @@
         android:layout_width="0dip"
         android:layout_height="match_parent"
         android:layout_weight="0.2"/>
-      <com.triggertrap.seekarc.SeekArc
-        android:id="@+id/ch1_hi"
-        id="@+id/ch1_eq_high"
+      <FrameLayout
         android:layout_width="0dip"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:padding="30dp"
-        seekarc:max="255"
-        seekarc:progress="127"
-        seekarc:rotation="180"
-        seekarc:startAngle="30"
-        seekarc:sweepAngle="300"/>
+        android:layout_weight="1">
+        <com.triggertrap.seekarc.SeekArc
+          android:id="@+id/ch1_hi"
+          id="@+id/ch1_eq_high"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:padding="30dp"
+          seekarc:max="255"
+          seekarc:progress="127"
+          seekarc:progressColor="#ffa000"
+          seekarc:progressWidth="2dp"
+          seekarc:rotation="180"
+          seekarc:startAngle="30"
+          seekarc:sweepAngle="300"
+          seekarc:thumb="@drawable/custom_seek_arc_control_selector"/>
+        <TextView
+          android:id="@+id/ch1_db_hi"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_gravity="center"
+          android:text="0dB"
+          android:textColor="#BDBDBD"
+          android:textSize="20sp"/>
+      </FrameLayout>
       <Space
         android:layout_width="0dip"
         android:layout_height="match_parent"
         android:layout_weight="0.2"/>
-      <com.triggertrap.seekarc.SeekArc
-        android:id="@+id/ch2_hi"
-        id="@+id/ch2_eq_high"
+      <FrameLayout
         android:layout_width="0dip"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:padding="30dp"
-        seekarc:max="255"
-        seekarc:progress="127"
-        seekarc:rotation="180"
-        seekarc:startAngle="30"
-        seekarc:sweepAngle="300"/>
+        android:layout_weight="1">
+        <com.triggertrap.seekarc.SeekArc
+          android:id="@+id/ch2_hi"
+          id="@+id/ch2_eq_high"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:padding="30dp"
+          seekarc:max="255"
+          seekarc:progress="127"
+          seekarc:progressColor="#ffa000"
+          seekarc:progressWidth="2dp"
+          seekarc:rotation="180"
+          seekarc:startAngle="30"
+          seekarc:sweepAngle="300"
+          seekarc:thumb="@drawable/custom_seek_arc_control_selector"/>
+        <TextView
+          android:id="@+id/ch2_db_hi"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_gravity="center"
+          android:text="0dB"
+          android:textColor="#BDBDBD"
+          android:textSize="20sp"/>
+      </FrameLayout>
       <Space
         android:layout_width="0dip"
         android:layout_height="match_parent"
@@ -110,7 +143,8 @@
         android:layout_weight="1"
         android:layout_gravity="bottom"
         android:text="MID"
-        android:textAlignment="textEnd"/>
+        android:textAlignment="textEnd"
+        android:textColor="#bdbdbd"/>
       <Space
         android:layout_width="0dip"
         android:layout_height="match_parent"
@@ -121,7 +155,8 @@
         android:layout_weight="1"
         android:layout_gravity="bottom"
         android:text="MID"
-        android:textAlignment="textEnd"/>
+        android:textAlignment="textEnd"
+        android:textColor="#bdbdbd"/>
       <Space
         android:layout_width="0dip"
         android:layout_height="match_parent"
@@ -137,34 +172,64 @@
         android:layout_width="0dip"
         android:layout_height="match_parent"
         android:layout_weight="0.2"/>
-      <com.triggertrap.seekarc.SeekArc
-        android:id="@+id/ch1_mid"
-        id="@+id/ch1_eq_mid"
+      <FrameLayout
         android:layout_width="0dip"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:padding="30dp"
-        seekarc:max="255"
-        seekarc:progress="127"
-        seekarc:rotation="180"
-        seekarc:startAngle="30"
-        seekarc:sweepAngle="300"/>
+        android:layout_weight="1">
+        <com.triggertrap.seekarc.SeekArc
+          android:id="@+id/ch1_mid"
+          id="@+id/ch1_eq_mid"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:padding="30dp"
+          seekarc:max="255"
+          seekarc:progress="127"
+          seekarc:progressColor="#ffa000"
+          seekarc:progressWidth="2dp"
+          seekarc:rotation="180"
+          seekarc:startAngle="30"
+          seekarc:sweepAngle="300"
+          seekarc:thumb="@drawable/custom_seek_arc_control_selector"/>
+        <TextView
+          android:id="@+id/ch1_db_mid"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_gravity="center"
+          android:text="0dB"
+          android:textColor="#BDBDBD"
+          android:textSize="20sp"/>
+      </FrameLayout>
       <Space
         android:layout_width="0dip"
         android:layout_height="match_parent"
         android:layout_weight="0.2"/>
-      <com.triggertrap.seekarc.SeekArc
-        android:id="@+id/ch2_mid"
-        id="@+id/ch2_eq_mid"
+      <FrameLayout
         android:layout_width="0dip"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:padding="30dp"
-        seekarc:max="255"
-        seekarc:progress="127"
-        seekarc:rotation="180"
-        seekarc:startAngle="30"
-        seekarc:sweepAngle="300"/>
+        android:layout_weight="1">
+        <com.triggertrap.seekarc.SeekArc
+          android:id="@+id/ch2_mid"
+          id="@+id/ch2_eq_mid"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:padding="30dp"
+          seekarc:max="255"
+          seekarc:progress="127"
+          seekarc:progressColor="#ffa000"
+          seekarc:progressWidth="2dp"
+          seekarc:rotation="180"
+          seekarc:startAngle="30"
+          seekarc:sweepAngle="300"
+          seekarc:thumb="@drawable/custom_seek_arc_control_selector"/>
+        <TextView
+          android:id="@+id/ch2_db_mid"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_gravity="center"
+          android:text="0dB"
+          android:textColor="#BDBDBD"
+          android:textSize="20sp"/>
+      </FrameLayout>
       <Space
         android:layout_width="0dip"
         android:layout_height="match_parent"
@@ -187,7 +252,8 @@
         android:layout_weight="1"
         android:layout_gravity="bottom"
         android:text="LOW"
-        android:textAlignment="textEnd"/>
+        android:textAlignment="textEnd"
+        android:textColor="#bdbdbd"/>
       <Space
         android:layout_width="0dip"
         android:layout_height="match_parent"
@@ -198,7 +264,8 @@
         android:layout_weight="1"
         android:layout_gravity="bottom"
         android:text="LOW"
-        android:textAlignment="textEnd"/>
+        android:textAlignment="textEnd"
+        android:textColor="#bdbdbd"/>
       <Space
         android:layout_width="0dip"
         android:layout_height="match_parent"
@@ -214,34 +281,64 @@
         android:layout_width="0dip"
         android:layout_height="match_parent"
         android:layout_weight="0.2"/>
-      <com.triggertrap.seekarc.SeekArc
-        android:id="@+id/ch1_low"
-        id="@+id/ch1_eq_low"
+      <FrameLayout
         android:layout_width="0dip"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:padding="30dp"
-        seekarc:max="255"
-        seekarc:progress="127"
-        seekarc:rotation="180"
-        seekarc:startAngle="30"
-        seekarc:sweepAngle="300"/>
+        android:layout_weight="1">
+        <com.triggertrap.seekarc.SeekArc
+          android:id="@+id/ch1_low"
+          id="@+id/ch1_eq_low"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:padding="30dp"
+          seekarc:max="255"
+          seekarc:progress="127"
+          seekarc:progressColor="#ffa000"
+          seekarc:progressWidth="2dp"
+          seekarc:rotation="180"
+          seekarc:startAngle="30"
+          seekarc:sweepAngle="300"
+          seekarc:thumb="@drawable/custom_seek_arc_control_selector"/>
+        <TextView
+          android:id="@+id/ch1_db_low"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_gravity="center"
+          android:text="0dB"
+          android:textColor="#BDBDBD"
+          android:textSize="20sp"/>
+      </FrameLayout>
       <Space
         android:layout_width="0dip"
         android:layout_height="match_parent"
         android:layout_weight="0.2"/>
-      <com.triggertrap.seekarc.SeekArc
-        android:id="@+id/ch2_low"
-        id="@+id/ch2_eq_low"
+      <FrameLayout
         android:layout_width="0dip"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:padding="30dp"
-        seekarc:max="255"
-        seekarc:progress="127"
-        seekarc:rotation="180"
-        seekarc:startAngle="30"
-        seekarc:sweepAngle="300"/>
+        android:layout_weight="1">
+        <com.triggertrap.seekarc.SeekArc
+          android:id="@+id/ch2_low"
+          id="@+id/ch2_eq_low"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:padding="30dp"
+          seekarc:max="255"
+          seekarc:progress="127"
+          seekarc:progressColor="#ffa000"
+          seekarc:progressWidth="2dp"
+          seekarc:rotation="180"
+          seekarc:startAngle="30"
+          seekarc:sweepAngle="300"
+          seekarc:thumb="@drawable/custom_seek_arc_control_selector"/>
+        <TextView
+          android:id="@+id/ch2_db_low"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_gravity="center"
+          android:text="0dB"
+          android:textColor="#BDBDBD"
+          android:textSize="20sp"/>
+      </FrameLayout>
       <Space
         android:layout_width="0dip"
         android:layout_height="match_parent"
