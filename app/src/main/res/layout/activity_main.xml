@@ -5,8 +5,9 @@
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
-  tools:context="net.tkrworks.sigmamixremote.MainActivity"
-  android:keepScreenOn="true">
+  android:background="#404040"
+  android:keepScreenOn="true"
+  tools:context="net.tkrworks.sigmamixremote.MainActivity">
 
   <android.support.v7.widget.Toolbar
     android:id="@+id/toolbar"
@@ -18,25 +19,26 @@
     android:minHeight="?attr/actionBarSize"
     android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
     app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-    app:titleTextColor="@color/my_black"/>
+    app:titleTextColor="#404040"/>
 
   <android.support.design.widget.TabLayout
     android:id="@+id/tab_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_below="@+id/toolbar"
+    android:layout_marginTop="2dp"
+    android:layout_below="@id/toolbar"
     android:elevation="6dp"
     android:minHeight="?attr/actionBarSize"
     android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
     app:tabBackground="@drawable/tab_color_selector"
-    app:tabIndicatorColor="@color/my_gray"
-    app:tabSelectedTextColor="@color/my_gray"
-    app:tabTextColor="@color/my_black"/>
+    app:tabIndicatorColor="#404040"
+    app:tabSelectedTextColor="@color/my_yellow"
+    app:tabTextColor="#404040"/>
 
   <android.support.v4.view.ViewPager
     android:id="@+id/pager"
     android:layout_width="match_parent"
     android:layout_height="fill_parent"
-    android:layout_below="@id/tab_layout"/>
+    android:layout_below="@+id/tab_layout"/>
 
 </RelativeLayout>

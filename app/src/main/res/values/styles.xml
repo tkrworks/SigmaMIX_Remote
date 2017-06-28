@@ -19,7 +19,7 @@
     <!-- inactive track color (30% transparency) -->
     <item name="android:colorForeground">#757575</item>
 
-    <item name="android:actionMenuTextColor">#212121</item>
+    <item name="android:actionMenuTextColor">#404040</item>
   </style>
 
 </resources>
