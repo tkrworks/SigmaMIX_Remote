@@ -10,6 +10,9 @@
   <string name="EQ_MID_CHARACTERISTIC_UUID">b759ac9e-f274-4ea6-82d4-eded7fd1ba6b</string>
   <string name="EQ_LOW_CHARACTERISTIC_UUID">ef34940a-c6dd-4832-9643-7798061029d9</string>
   <string name="IFADER_CHARACTERISTIC_UUID">815f1b0a-78f5-4162-b60e-517705106362</string>
+  <string name="XFADER_CHARACTERISTIC_UUID">16b4021c-5f01-4eb0-8d00-aeaa01cee85f</string>
   <string name="MASTER_BOOTH_GAIN_CHARACTERISTIC_UUID">9f5c0ec8-006e-4c1a-bc03-092a38ea0134</string>
   <string name="MONITOR_SETTING_CHARACTERISTIC_UUID">cc3d79bf-4dc0-498d-92d8-210af7ddb13f</string>
+
+  <string name="XFADER_DESCRIPToR_UUID">00002902-0000-1000-8000-00805f9b34fb</string>
 </resources>

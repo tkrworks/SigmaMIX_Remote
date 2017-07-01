@@ -36,7 +36,11 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.View.OnTouchListener;
 import android.widget.ArrayAdapter;
+import android.widget.SeekBar;
 import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
@@ -60,6 +64,7 @@ public class MainActivity extends AppCompatActivity {
   private BluetoothGattCharacteristic m3BandEqMidCharacteristic;
   private BluetoothGattCharacteristic m3BandEqLowCharacteristic;
   private BluetoothGattCharacteristic mInputFaderCharacteristic;
+  private BluetoothGattCharacteristic mCrossFaderCharacteristic;
   private BluetoothGattCharacteristic mMasterBoothGainCharacteristic;
   private BluetoothGattCharacteristic mMonitorSelectLevelCharacteristic;
 
@@ -67,11 +72,16 @@ public class MainActivity extends AppCompatActivity {
   private List<BluetoothDevice> mSigmaMixBdList = new ArrayList<>();
   private ArrayAdapter<String> mSigmaMixAdapter;
 
+  private TabLayout tabLayout;
   private ProgressDialog sigmaScanProgressDialog;
+  private SeekBar xfaderBar;
 
   private Handler mHandler;
 
   private boolean isConnectedBLE = false;
+
+  private int currentXfaderPosition = 127;
+  private int prevXfaderPosition = 127;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -90,7 +100,7 @@ public class MainActivity extends AppCompatActivity {
     Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
     setSupportActionBar(toolbar);
 
-    TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
+    tabLayout = (TabLayout) findViewById(R.id.tab_layout);
     tabLayout.addTab(tabLayout.newTab().setText(R.string.input));
     tabLayout.addTab(tabLayout.newTab().setText(R.string.knob));
     tabLayout.addTab(tabLayout.newTab().setText(R.string.fader));
@@ -128,11 +138,31 @@ public class MainActivity extends AppCompatActivity {
   @Override
   protected void onDestroy() {
     super.onDestroy();
+
+    mHandler.removeCallbacksAndMessages(null);
+    mHandler = null;
   }
 
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
     getMenuInflater().inflate(R.menu.menu_main, menu);
+    return true;
+  }
+
+  @Override
+  public boolean onPrepareOptionsMenu(Menu menu) {
+    super.onPrepareOptionsMenu(menu);
+
+    MyLog.d("DEBUG", "onPrepareOptionsMenu");
+
+    MenuItem menuItem = (MenuItem) menu.findItem(R.id.scan_disconnect);
+
+    if (isConnectedBLE) {
+      menuItem.setTitle(getString(R.string.disconnect));
+    } else {
+      menuItem.setTitle(getString(R.string.scan));
+    }
+
     return true;
   }
 
@@ -164,51 +194,53 @@ public class MainActivity extends AppCompatActivity {
             }
           });
       sigmaScanProgressDialog.show();
-    }
 
-    mHandler.postDelayed(new Runnable() {
-      @Override
-      public void run() {
-        stopScan();
+      mHandler.postDelayed(new Runnable() {
+        @Override
+        public void run() {
+          stopScan();
 
-        sigmaScanProgressDialog.dismiss();
+          sigmaScanProgressDialog.dismiss();
 
-        AlertDialog.Builder selectListDialog = new AlertDialog.Builder(MainActivity.this);
+          AlertDialog.Builder selectListDialog = new AlertDialog.Builder(MainActivity.this);
 
-        if (mSigmaMixNameList.size() > 0) {
-          //final String[] nameList = mSigmaMixNameList.toArray(new String[0]);
-          //final BluetoothDevice[] addrList = mSigmaMixBdList.toArray(new BluetoothDevice[0]);
-          final BluetoothDevice[] bdList = mSigmaMixBdList.toArray(new BluetoothDevice[0]);
-          final String[] nameAndAddrList = new String[bdList.length];
-          for (int i = 0; i < nameAndAddrList.length; i++) {
-            nameAndAddrList[i] = String
-                .format("%s(%s)", bdList[i].getName(), bdList[i].getAddress());
+          if (mSigmaMixNameList.size() > 0) {
+            //final String[] nameList = mSigmaMixNameList.toArray(new String[0]);
+            //final BluetoothDevice[] addrList = mSigmaMixBdList.toArray(new BluetoothDevice[0]);
+            final BluetoothDevice[] bdList = mSigmaMixBdList.toArray(new BluetoothDevice[0]);
+            final String[] nameAndAddrList = new String[bdList.length];
+            for (int i = 0; i < nameAndAddrList.length; i++) {
+              nameAndAddrList[i] = String
+                  .format("%s(%s)", bdList[i].getName(), bdList[i].getAddress());
+            }
+
+            selectListDialog.setTitle("Select Your SigmaMIX");
+            selectListDialog.setItems(nameAndAddrList, new DialogInterface.OnClickListener() {
+              public void onClick(DialogInterface dialog, int which) {
+                MyLog.d("DEBUG", "select %s", nameAndAddrList[which]);
+
+                mBleGatt = bdList[which]
+                    .connectGatt(getApplicationContext(), false, mBleGattCallback);
+              }
+            });
+            selectListDialog.setNegativeButton("CANCEL", null);
+
+            selectListDialog.show();
+          } else {
+            selectListDialog.setTitle("Not Found SigmaMIX");
+            selectListDialog.setMessage("Do you scan again?");
+            selectListDialog.setPositiveButton("RESCAN", new DialogInterface.OnClickListener() {
+              public void onClick(DialogInterface dialog, int which) {
+                MyLog.d("DEBUG", "rescan...");
+              }
+            });
+            selectListDialog.setNegativeButton("CANCEL", null);
           }
-
-          selectListDialog.setTitle("Select Your SigmaMIX");
-          selectListDialog.setItems(nameAndAddrList, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-              MyLog.d("DEBUG", "select %s", nameAndAddrList[which]);
-
-              mBleGatt = bdList[which]
-                  .connectGatt(getApplicationContext(), false, mBleGattCallback);
-            }
-          });
-          selectListDialog.setNegativeButton("CANCEL", null);
-
-          selectListDialog.show();
-        } else {
-          selectListDialog.setTitle("Not Found SigmaMIX");
-          selectListDialog.setMessage("Do you scan again?");
-          selectListDialog.setPositiveButton("RESCAN", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-              MyLog.d("DEBUG", "rescan...");
-            }
-          });
-          selectListDialog.setNegativeButton("CANCEL", null);
         }
-      }
-    }, 5000);
+      }, 5000);
+    } else if (item.getTitle().equals(getString(R.string.disconnect))) {
+      mBleGatt.disconnect();
+    }
 
     return super.onOptionsItemSelected(item);
   }
@@ -454,6 +486,8 @@ public class MainActivity extends AppCompatActivity {
       } else if (newState == BluetoothProfile.STATE_CONNECTED) {
         Log.d("DEBUG", "connected...");
 
+        invalidateOptionsMenu();
+
         gatt.discoverServices();
 
         isConnectedBLE = true;
@@ -469,6 +503,8 @@ public class MainActivity extends AppCompatActivity {
 
         isConnectedBLE = false;
         //is_completed_char_conf = 0;
+
+        invalidateOptionsMenu();
       }
     }
 
@@ -507,6 +543,34 @@ public class MainActivity extends AppCompatActivity {
                   m3BandEqLowCharacteristic = characteristic;
                 } else if (getString(R.string.IFADER_CHARACTERISTIC_UUID).equals(characteristic.getUuid().toString())) {
                   mInputFaderCharacteristic = characteristic;
+                } else if (getString(R.string.XFADER_CHARACTERISTIC_UUID).equals(characteristic.getUuid().toString())) {
+                  mCrossFaderCharacteristic = characteristic;
+
+                  boolean notify_registered = gatt.setCharacteristicNotification(characteristic, true);
+                  if (notify_registered) {
+                    MyLog.d("DEBUG", "XFADER NOTIFICATION: SUCCESS");
+                  } else {
+                    MyLog.d("DEBUG", "XFADER NOTIFICATION: FAILURE");
+                  }
+
+                  List<BluetoothGattDescriptor> descriptors = characteristic.getDescriptors();
+                  for (BluetoothGattDescriptor descriptor : descriptors) {
+                    MyLog.d("DEBUG", "XFADER DESCRIPTOR: %s", descriptor.getUuid().toString());
+
+                    if (getString(R.string.XFADER_DESCRIPToR_UUID).equals(descriptor.getUuid().toString())) {
+                      if ((characteristic.getProperties() & BluetoothGattCharacteristic.PROPERTY_NOTIFY) != 0) {
+                        MyLog.d("DEBUG", "CHARACTERISTIC ( %s ) is NOTIFY", characteristic.getUuid().toString());
+
+                        descriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
+                        boolean descriptorFlag = gatt.writeDescriptor(descriptor);
+                        if (descriptorFlag) {
+                          MyLog.d("DEBUG", "write descriptor is OK.");
+                        } else {
+                          MyLog.d("DEBUG", "write descriptor is NG.");
+                        }
+                      }
+                    }
+                  }
                 } else if (getString(R.string.MASTER_BOOTH_GAIN_CHARACTERISTIC_UUID).equals(characteristic.getUuid().toString())) {
                   mMasterBoothGainCharacteristic = characteristic;
                 } else if (getString(R.string.MONITOR_SETTING_CHARACTERISTIC_UUID).equals(characteristic.getUuid().toString())) {
@@ -541,7 +605,32 @@ public class MainActivity extends AppCompatActivity {
         BluetoothGattCharacteristic characteristic) {
       super.onCharacteristicChanged(gatt, characteristic);
 
-      MyLog.d("DEBUG", "characteristic changed");
+      byte[] bytes = characteristic.getValue();
+
+      if (tabLayout.getSelectedTabPosition() == 2) {
+        currentXfaderPosition = (bytes[1] < 0) ? (bytes[1] + 255) : bytes[1];
+
+        //debug MyLog.d("DEBUG", "characteristic changed %02x %02x %d", bytes[0], bytes[1], xfaderPosition);
+
+        if (currentXfaderPosition != prevXfaderPosition) {
+          mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+              if (xfaderBar == null) {
+                xfaderBar = (SeekBar) findViewById(R.id.xf);
+                xfaderBar.setOnTouchListener(new OnTouchListener() {
+                  @Override
+                  public boolean onTouch(View v, MotionEvent event) {
+                    return true;
+                  }
+                });
+              }
+              xfaderBar.setProgress(currentXfaderPosition);
+            }
+          });
+        }
+        prevXfaderPosition = currentXfaderPosition;
+      }
     }
 
     @Override
