@@ -43,6 +43,8 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Handler;
 import android.os.ParcelUuid;
@@ -93,6 +95,7 @@ public class MainActivity extends AppCompatActivity {
   private List<BluetoothDevice> mSigmaMixBdList = new ArrayList<>();
   private ArrayAdapter<String> mSigmaMixAdapter;
 
+  private Toolbar toolbar;
   private TabLayout tabLayout;
   private ProgressDialog sigmaScanProgressDialog;
   private SeekBar xfaderBar;
@@ -118,7 +121,7 @@ public class MainActivity extends AppCompatActivity {
     mPreferences = PreferenceManager.getDefaultSharedPreferences(this);
     mEditor = mPreferences.edit();
 
-    Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+    toolbar = (Toolbar) findViewById(R.id.toolbar);
     setSupportActionBar(toolbar);
 
     tabLayout = (TabLayout) findViewById(R.id.tab_layout);
@@ -181,8 +184,14 @@ public class MainActivity extends AppCompatActivity {
 
     if (isConnectedBLE) {
       menuItem.setTitle(getString(R.string.disconnect));
+
+      toolbar.setBackground(new ColorDrawable(Color.rgb(0xFF, 0xA0, 0x00)));
+      toolbar.setTitleTextColor(Color.rgb(0x40, 0x40, 0x40));
     } else {
       menuItem.setTitle(getString(R.string.scan));
+
+      toolbar.setBackground(new ColorDrawable(Color.rgb(0x21, 0x21, 0x21)));
+      toolbar.setTitleTextColor(Color.rgb(0xFF, 0xA0, 0x00));
     }
 
     return true;
