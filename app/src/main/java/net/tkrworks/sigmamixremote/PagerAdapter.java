@@ -19,21 +19,17 @@
  * PagerAdapter.java
  */
 
-
 package net.tkrworks.sigmamixremote;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
-/**
- * Created by shun on 2017/06/21.
- */
+class PagerAdapter extends FragmentStatePagerAdapter {
 
-public class PagerAdapter extends FragmentStatePagerAdapter {
   int mNumOfTabs;
 
-  public PagerAdapter(FragmentManager fragmentManager, int numOfTabs) {
+  PagerAdapter(FragmentManager fragmentManager, int numOfTabs) {
     super(fragmentManager);
 
     mNumOfTabs = numOfTabs;
@@ -43,17 +39,13 @@ public class PagerAdapter extends FragmentStatePagerAdapter {
   public Fragment getItem(int position) {
     switch (position) {
       case 0:
-        InputControlFragment inputControlTab = new InputControlFragment();
-        return inputControlTab;
+        return InputControlFragment.newInstance();
       case 1:
-        KnobControlFragment knobControlTab = new KnobControlFragment();
-        return knobControlTab;
+        return KnobControlFragment.newInstance();
       case 2:
-        FaderControlFragment faderControlFragment = new FaderControlFragment();
-        return faderControlFragment;
+        return FaderControlFragment.newInstance();
       case 3:
-        MasterControlFragment masterControlFragment = new MasterControlFragment();
-        return masterControlFragment;
+        return MasterControlFragment.newInstance();
       default:
         return null;
     }

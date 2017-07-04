@@ -45,8 +45,10 @@ public class MasterControlFragment extends Fragment {
   private TextView mSelectRate;
   private TextView mMonitordB;
 
-  public MasterControlFragment() {
-    // Required empty public constructor
+  public static MasterControlFragment newInstance() {
+    MasterControlFragment fragment = new MasterControlFragment();
+
+    return fragment;
   }
 
   @Override
@@ -167,5 +169,13 @@ public class MasterControlFragment extends Fragment {
   public void onDetach() {
     super.onDetach();
 
+    mMasterGain = null;
+    mBoothGain = null;
+    mMonitorSelect = null;
+    mMonitorLevel = null;
+    mMasterdB = null;
+    mBoothdB = null;
+    mSelectRate = null;
+    mMonitordB = null;
   }
 }

@@ -132,6 +132,7 @@ public class MainActivity extends AppCompatActivity {
     final PagerAdapter adapter = new PagerAdapter
         (getSupportFragmentManager(), tabLayout.getTabCount());
     viewPager.setAdapter(adapter);
+    viewPager.setOffscreenPageLimit(4);
     viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
     tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
       @Override

@@ -49,8 +49,10 @@ public class KnobControlFragment extends Fragment {
   private TextView mCh1dBLow;
   private TextView mCh2dBLow;
 
-  public KnobControlFragment() {
-    // Required empty public constructor
+  public static KnobControlFragment newInstance() {
+    KnobControlFragment fragment = new KnobControlFragment();
+
+    return fragment;
   }
 
   @Override
@@ -208,5 +210,17 @@ public class KnobControlFragment extends Fragment {
   public void onDetach() {
     super.onDetach();
 
+    mCh1EqHi = null;
+    mCh2EqHi = null;
+    mCh1EqMid = null;
+    mCh2EqMid = null;
+    mCh1EqLow = null;
+    mCh2EqLow = null;
+    mCh1dBHi = null;
+    mCh2dBHi = null;
+    mCh1dBMid = null;
+    mCh2dBMid = null;
+    mCh1dBLow = null;
+    mCh2dBLow = null;
   }
 }

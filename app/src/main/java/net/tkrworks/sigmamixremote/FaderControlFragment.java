@@ -46,8 +46,10 @@ public class FaderControlFragment extends Fragment {
   private SeekArc mIfCurve;
   private SeekArc mXfCurve;
 
-  public FaderControlFragment() {
-    // Required empty public constructor
+  public static FaderControlFragment newInstance() {
+    FaderControlFragment fragment = new FaderControlFragment();
+
+    return fragment;
   }
 
   @Override
@@ -165,5 +167,11 @@ public class FaderControlFragment extends Fragment {
   public void onDetach() {
     super.onDetach();
 
+    mCh1Volume = null;
+    mCh2Volume = null;
+    mIfReverse = null;
+    mXfReverse = null;
+    mIfCurve = null;
+    mXfCurve = null;
   }
 }

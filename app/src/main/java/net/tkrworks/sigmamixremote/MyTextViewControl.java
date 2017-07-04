@@ -24,8 +24,8 @@ package net.tkrworks.sigmamixremote;
 import android.widget.TextView;
 import java.util.Locale;
 
-public class MyTextViewControl {
-  public static void setDecibel(TextView textview, int val, int dBMin, int dBMax) {
+class MyTextViewControl {
+  static void setDecibel(TextView textview, int val, int dBMin, int dBMax) {
     double currentRate = (val / 127.0) - 1.0;
     int currentDecibel;
     if (currentRate > 0.0) {

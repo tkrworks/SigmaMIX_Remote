@@ -46,8 +46,10 @@ public class InputControlFragment extends Fragment {
   private TextView mCh1dB;
   private TextView mCh2dB;
 
-  public InputControlFragment() {
-    // Required empty public constructor
+  public static InputControlFragment newInstance() {
+    InputControlFragment fragment = new InputControlFragment();
+
+    return fragment;
   }
 
   @Override
@@ -139,5 +141,13 @@ public class InputControlFragment extends Fragment {
   public void onDetach() {
     super.onDetach();
 
+    MyLog.d("DEBUG", "INPUT:: onDetach");
+
+    mCh1LinePhonoSw = null;
+    mCh2LinePhonoSw = null;
+    mCh1InputGain = null;
+    mCh2InputGain = null;
+    mCh1dB = null;
+    mCh2dB = null;
   }
 }
