@@ -35,4 +35,14 @@
   <string name="knob">EQ</string>
   <string name="fader">IF/XF</string>
   <string name="master">MASTER</string>
+
+  <string-array name="fx_type">
+    <item>NO EFFECTS</item>
+    <item>CH1: PITCH SHIFT</item>
+    <item>CH1: LPF</item>
+    <item>CH2: PITCH SHIFT</item>
+    <item>CH2: LPF</item>
+    <item>CH1: PITCH SHIFT, CH2: LPF</item>
+    <item>CH1: LPF, CH2: PITCH SHIFT</item>
+  </string-array>
 </resources>
