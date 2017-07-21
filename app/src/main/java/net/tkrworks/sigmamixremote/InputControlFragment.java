@@ -28,8 +28,11 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
+import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
 import com.triggertrap.seekarc.SeekArc;
@@ -45,6 +48,7 @@ public class InputControlFragment extends Fragment {
   private SeekArc mCh2InputGain;
   private TextView mCh1dB;
   private TextView mCh2dB;
+  private Spinner mFxType;
 
   public static InputControlFragment newInstance() {
     InputControlFragment fragment = new InputControlFragment();
@@ -129,6 +133,19 @@ public class InputControlFragment extends Fragment {
 
     mCh1dB = (TextView) view.findViewById(R.id.ch1_db);
     mCh2dB = (TextView) view.findViewById(R.id.ch2_db);
+
+    mFxType = (Spinner) view.findViewById(R.id.fx_type);
+    mFxType.setOnItemSelectedListener(new OnItemSelectedListener() {
+      @Override
+      public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        ((MainActivity) getActivity()).selectEffectType(position);
+      }
+
+      @Override
+      public void onNothingSelected(AdapterView<?> parent) {
+
+      }
+    });
   }
 
   @Override
