@@ -216,6 +216,7 @@
         android:layout_width="0dip"
         android:layout_height="match_parent"
         android:layout_weight="1.0"
+        android:theme="@style/spinnerTheme"
         android:background="@drawable/border_spinner"
         android:entries="@array/fx_type"
         android:popupBackground="@color/my_yellow"/>

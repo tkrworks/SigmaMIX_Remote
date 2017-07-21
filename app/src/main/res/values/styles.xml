@@ -45,4 +45,13 @@
     <item name="android:actionMenuTextColor">#404040</item>
   </style>
 
+  <style name="mySpinnerItemStyle" parent="Base.Widget.AppCompat.Spinner">
+    <item name="android:textColor">#BDBDBD</item>
+  </style>
+
+  <style name="spinnerTheme" parent="android:Theme">
+    <item name="android:textColor">#BDBDBD</item>
+    <item name="android:paddingStart">10sp</item>
+  </style>
+
 </resources>
