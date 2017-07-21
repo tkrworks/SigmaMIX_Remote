@@ -90,6 +90,7 @@ public class MainActivity extends AppCompatActivity {
   private BluetoothGattCharacteristic mCrossFaderCharacteristic;
   private BluetoothGattCharacteristic mMasterBoothGainCharacteristic;
   private BluetoothGattCharacteristic mMonitorSelectLevelCharacteristic;
+  private BluetoothGattCharacteristic mEffectSelectorCharacteristic;
   private BluetoothGattCharacteristic mSettingWriteCharacteristic;
   private BluetoothGattCharacteristic mSettingReadCharacteristic;
 
@@ -489,6 +490,18 @@ public class MainActivity extends AppCompatActivity {
     }
   }
 
+  void selectEffectType(int type) {
+    byte[] value = new byte[1];
+    value[0] = (byte) type;
+
+    MyLog.d("DEBUG", "Effect Selector = %02x", value[0]);
+
+    if (isConnectedBLE) {
+      mEffectSelectorCharacteristic.setValue(value);
+      mBleGatt.writeCharacteristic(mEffectSelectorCharacteristic);
+    }
+  }
+
   void adjustMonitorSelectLevel(int select_value, int level_value) {
     byte[] value = new byte[6];
     value[5] = (byte)((select_value >> 16) & 0xFF);
@@ -654,6 +667,8 @@ public class MainActivity extends AppCompatActivity {
                   mMasterBoothGainCharacteristic = characteristic;
                 } else if (getString(R.string.MONITOR_SETTING_CHARACTERISTIC_UUID).equals(characteristic.getUuid().toString())) {
                   mMonitorSelectLevelCharacteristic = characteristic;
+                } else if (getString(R.string.EFFECT_SELECTOR_CHARACTERISTIC_UUID).equals(characteristic.getUuid().toString())) {
+                  mEffectSelectorCharacteristic = characteristic;
                 } else if (getString(R.string.SETTINGS_WRITE_CHARACTERISTIC_UUID).equals(characteristic.getUuid().toString())) {
                   mSettingWriteCharacteristic = characteristic;
                 } else if (getString(R.string.SETTINGS_READ_CHARACTERISTIC_UUID).equals(characteristic.getUuid().toString())) {
