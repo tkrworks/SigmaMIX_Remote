@@ -27,6 +27,10 @@
   xmlns:app="http://schemas.android.com/apk/res-auto">
 
   <item
+    android:id="@+id/save"
+    android:title="SAVE"
+    app:showAsAction="always"/>
+  <item
     android:id="@+id/scan_disconnect"
     android:title="SCAN"
     app:showAsAction="always"/>

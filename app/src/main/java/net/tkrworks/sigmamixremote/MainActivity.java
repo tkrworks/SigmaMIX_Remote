@@ -90,6 +90,8 @@ public class MainActivity extends AppCompatActivity {
   private BluetoothGattCharacteristic mCrossFaderCharacteristic;
   private BluetoothGattCharacteristic mMasterBoothGainCharacteristic;
   private BluetoothGattCharacteristic mMonitorSelectLevelCharacteristic;
+  private BluetoothGattCharacteristic mSettingWriteCharacteristic;
+  private BluetoothGattCharacteristic mSettingReadCharacteristic;
 
   private List<String> mSigmaMixNameList = new ArrayList<>();
   private List<BluetoothDevice> mSigmaMixBdList = new ArrayList<>();
@@ -204,7 +206,11 @@ public class MainActivity extends AppCompatActivity {
     //  return true;
     //}
 
-    if (item.getTitle().equals(getString(R.string.scan))) {
+    if (item.getTitle().equals(getString(R.string.save))) {
+      MyLog.d("DEBUG", "tap save.");
+
+      writeCurrentSettings();
+    } else if (item.getTitle().equals(getString(R.string.scan))) {
       MyLog.d("DEBUG", "tap scan.");
 
       startScan();
@@ -500,6 +506,48 @@ public class MainActivity extends AppCompatActivity {
     }
   }
 
+  void writeCurrentSettings() {
+    byte[] value = new byte[1];
+    value[0] = (byte)(1);
+
+    MyLog.d("DEBUG", "Settings Write = %d", value[0]);
+
+    if (isConnectedBLE) {
+      mSettingWriteCharacteristic.setValue(value);
+      mBleGatt.writeCharacteristic(mSettingWriteCharacteristic);
+    }
+  }
+
+  void readCurrentSettings() {
+    byte[] value = new byte[1];
+    value[0] = (byte)(2);
+
+    MyLog.d("DEBUG", "Settings Write = %d", value[0]);
+
+    if (isConnectedBLE) {
+      mSettingWriteCharacteristic.setValue(value);
+      mBleGatt.writeCharacteristic(mSettingWriteCharacteristic);
+    }
+  }
+
+  void resetCurrentSettings() {
+    byte[] value = new byte[1];
+    value[0] = (byte)(-1);
+
+    MyLog.d("DEBUG", "Settings Write = %d", value[0]);
+
+    if (isConnectedBLE) {
+      mSettingWriteCharacteristic.setValue(value);
+      mBleGatt.writeCharacteristic(mSettingWriteCharacteristic);
+    }
+  }
+
+  void readAllParams() {
+    if (isConnectedBLE) {
+      mBleGatt.readCharacteristic(mSettingReadCharacteristic);
+    }
+  }
+
   /*
   mXFaderSettingCharacteristic;
   mIFaderSettingCharacteristic;
@@ -588,7 +636,7 @@ public class MainActivity extends AppCompatActivity {
                   for (BluetoothGattDescriptor descriptor : descriptors) {
                     MyLog.d("DEBUG", "XFADER DESCRIPTOR: %s", descriptor.getUuid().toString());
 
-                    if (getString(R.string.XFADER_DESCRIPToR_UUID).equals(descriptor.getUuid().toString())) {
+                    if (getString(R.string.XFADER_DESCRIPTOR_UUID).equals(descriptor.getUuid().toString())) {
                       if ((characteristic.getProperties() & BluetoothGattCharacteristic.PROPERTY_NOTIFY) != 0) {
                         MyLog.d("DEBUG", "CHARACTERISTIC ( %s ) is NOTIFY", characteristic.getUuid().toString());
 
@@ -606,6 +654,10 @@ public class MainActivity extends AppCompatActivity {
                   mMasterBoothGainCharacteristic = characteristic;
                 } else if (getString(R.string.MONITOR_SETTING_CHARACTERISTIC_UUID).equals(characteristic.getUuid().toString())) {
                   mMonitorSelectLevelCharacteristic = characteristic;
+                } else if (getString(R.string.SETTINGS_WRITE_CHARACTERISTIC_UUID).equals(characteristic.getUuid().toString())) {
+                  mSettingWriteCharacteristic = characteristic;
+                } else if (getString(R.string.SETTINGS_READ_CHARACTERISTIC_UUID).equals(characteristic.getUuid().toString())) {
+                  mSettingReadCharacteristic = characteristic;
                 }
               }
             }
