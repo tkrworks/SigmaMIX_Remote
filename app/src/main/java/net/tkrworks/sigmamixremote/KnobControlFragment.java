@@ -23,6 +23,7 @@ package net.tkrworks.sigmamixremote;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -36,6 +37,8 @@ import static net.tkrworks.sigmamixremote.MyTextViewControl.*;
 
 public class KnobControlFragment extends Fragment {
 
+  private Handler mHandler;
+
   private SeekArc mCh1EqHi;
   private SeekArc mCh2EqHi;
   private SeekArc mCh1EqMid;
@@ -48,6 +51,10 @@ public class KnobControlFragment extends Fragment {
   private TextView mCh2dBMid;
   private TextView mCh1dBLow;
   private TextView mCh2dBLow;
+
+  private UIUpdateThread mUIUpdateThread;
+
+  private boolean isUpdatingUI = false;
 
   public static KnobControlFragment newInstance() {
     KnobControlFragment fragment = new KnobControlFragment();
@@ -72,11 +79,15 @@ public class KnobControlFragment extends Fragment {
   public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
 
+    mHandler = new Handler();
+
     mCh1EqHi = (SeekArc) view.findViewById(R.id.ch1_hi);
     mCh1EqHi.setOnSeekArcChangeListener(new OnSeekArcChangeListener() {
       @Override
       public void onProgressChanged(SeekArc seekArc, int i, boolean b) {
-        ((MainActivity) getActivity()).adjust3BandEqHi(i, mCh2EqHi.getProgress());
+        if (!isUpdatingUI) {
+          ((MainActivity) getActivity()).adjust3BandEqHi(i, mCh2EqHi.getProgress());
+        }
         setDecibel(mCh1dBHi, i, -42, 15);
       }
 
@@ -87,7 +98,10 @@ public class KnobControlFragment extends Fragment {
 
       @Override
       public void onStopTrackingTouch(SeekArc seekArc) {
-        ((MainActivity) getActivity()).adjust3BandEqHi(mCh1EqHi.getProgress(), mCh2EqHi.getProgress());
+        if (!isUpdatingUI) {
+          ((MainActivity) getActivity())
+              .adjust3BandEqHi(mCh1EqHi.getProgress(), mCh2EqHi.getProgress());
+        }
         setDecibel(mCh1dBHi, seekArc.getProgress(), -42, 15);
       }
     });
@@ -96,7 +110,9 @@ public class KnobControlFragment extends Fragment {
     mCh2EqHi.setOnSeekArcChangeListener(new OnSeekArcChangeListener() {
       @Override
       public void onProgressChanged(SeekArc seekArc, int i, boolean b) {
-        ((MainActivity) getActivity()).adjust3BandEqHi(mCh1EqHi.getProgress(), i);
+        if (!isUpdatingUI) {
+          ((MainActivity) getActivity()).adjust3BandEqHi(mCh1EqHi.getProgress(), i);
+        }
         setDecibel(mCh2dBHi, i, -42, 15);
       }
 
@@ -107,7 +123,10 @@ public class KnobControlFragment extends Fragment {
 
       @Override
       public void onStopTrackingTouch(SeekArc seekArc) {
-        ((MainActivity) getActivity()).adjust3BandEqHi(mCh1EqHi.getProgress(), mCh2EqHi.getProgress());
+        if (!isUpdatingUI) {
+          ((MainActivity) getActivity())
+              .adjust3BandEqHi(mCh1EqHi.getProgress(), mCh2EqHi.getProgress());
+        }
         setDecibel(mCh2dBHi, seekArc.getProgress(), -42, 15);
       }
     });
@@ -116,7 +135,9 @@ public class KnobControlFragment extends Fragment {
     mCh1EqMid.setOnSeekArcChangeListener(new OnSeekArcChangeListener() {
       @Override
       public void onProgressChanged(SeekArc seekArc, int i, boolean b) {
-        ((MainActivity) getActivity()).adjust3BandEqMid(i, mCh2EqMid.getProgress());
+        if (!isUpdatingUI) {
+          ((MainActivity) getActivity()).adjust3BandEqMid(i, mCh2EqMid.getProgress());
+        }
         setDecibel(mCh1dBMid, i, -42, 15);
       }
 
@@ -127,7 +148,10 @@ public class KnobControlFragment extends Fragment {
 
       @Override
       public void onStopTrackingTouch(SeekArc seekArc) {
-        ((MainActivity) getActivity()).adjust3BandEqMid(mCh1EqMid.getProgress(), mCh2EqMid.getProgress());
+        if (!isUpdatingUI) {
+          ((MainActivity) getActivity())
+              .adjust3BandEqMid(mCh1EqMid.getProgress(), mCh2EqMid.getProgress());
+        }
         setDecibel(mCh1dBMid, seekArc.getProgress(), -42, 15);
       }
     });
@@ -136,7 +160,9 @@ public class KnobControlFragment extends Fragment {
     mCh2EqMid.setOnSeekArcChangeListener(new OnSeekArcChangeListener() {
       @Override
       public void onProgressChanged(SeekArc seekArc, int i, boolean b) {
-        ((MainActivity) getActivity()).adjust3BandEqMid(mCh1EqMid.getProgress(), i);
+        if (!isUpdatingUI) {
+          ((MainActivity) getActivity()).adjust3BandEqMid(mCh1EqMid.getProgress(), i);
+        }
         setDecibel(mCh2dBMid, i, -42, 15);
       }
 
@@ -147,7 +173,10 @@ public class KnobControlFragment extends Fragment {
 
       @Override
       public void onStopTrackingTouch(SeekArc seekArc) {
-        ((MainActivity) getActivity()).adjust3BandEqMid(mCh1EqMid.getProgress(), mCh2EqMid.getProgress());
+        if (!isUpdatingUI) {
+          ((MainActivity) getActivity())
+              .adjust3BandEqMid(mCh1EqMid.getProgress(), mCh2EqMid.getProgress());
+        }
         setDecibel(mCh2dBMid, seekArc.getProgress(), -42, 15);
       }
     });
@@ -156,7 +185,9 @@ public class KnobControlFragment extends Fragment {
     mCh1EqLow.setOnSeekArcChangeListener(new OnSeekArcChangeListener() {
       @Override
       public void onProgressChanged(SeekArc seekArc, int i, boolean b) {
-        ((MainActivity) getActivity()).adjust3BandEqLow(i, mCh2EqLow.getProgress());
+        if (!isUpdatingUI) {
+          ((MainActivity) getActivity()).adjust3BandEqLow(i, mCh2EqLow.getProgress());
+        }
         setDecibel(mCh1dBLow, i, -42, 15);
       }
 
@@ -167,7 +198,10 @@ public class KnobControlFragment extends Fragment {
 
       @Override
       public void onStopTrackingTouch(SeekArc seekArc) {
-        ((MainActivity) getActivity()).adjust3BandEqLow(mCh1EqLow.getProgress(), mCh2EqLow.getProgress());
+        if (!isUpdatingUI) {
+          ((MainActivity) getActivity())
+              .adjust3BandEqLow(mCh1EqLow.getProgress(), mCh2EqLow.getProgress());
+        }
         setDecibel(mCh1dBLow, seekArc.getProgress(), -42, 15);
       }
     });
@@ -176,7 +210,9 @@ public class KnobControlFragment extends Fragment {
     mCh2EqLow.setOnSeekArcChangeListener(new OnSeekArcChangeListener() {
       @Override
       public void onProgressChanged(SeekArc seekArc, int i, boolean b) {
-        ((MainActivity) getActivity()).adjust3BandEqLow(mCh1EqLow.getProgress(), i);
+        if (!isUpdatingUI) {
+          ((MainActivity) getActivity()).adjust3BandEqLow(mCh1EqLow.getProgress(), i);
+        }
         setDecibel(mCh2dBLow, i, -42, 15);
       }
 
@@ -187,7 +223,10 @@ public class KnobControlFragment extends Fragment {
 
       @Override
       public void onStopTrackingTouch(SeekArc seekArc) {
-        ((MainActivity) getActivity()).adjust3BandEqLow(mCh1EqLow.getProgress(), mCh2EqLow.getProgress());
+        if (!isUpdatingUI) {
+          ((MainActivity) getActivity())
+              .adjust3BandEqLow(mCh1EqLow.getProgress(), mCh2EqLow.getProgress());
+        }
         setDecibel(mCh2dBLow, seekArc.getProgress(), -42, 15);
       }
     });
@@ -198,6 +237,9 @@ public class KnobControlFragment extends Fragment {
     mCh2dBMid = (TextView) view.findViewById(R.id.ch2_db_mid);;
     mCh1dBLow = (TextView) view.findViewById(R.id.ch1_db_low);;
     mCh2dBLow = (TextView) view.findViewById(R.id.ch2_db_low);;
+
+    mUIUpdateThread = new UIUpdateThread();
+    mUIUpdateThread.start();
   }
 
   @Override
@@ -209,6 +251,8 @@ public class KnobControlFragment extends Fragment {
   @Override
   public void onDetach() {
     super.onDetach();
+
+    mHandler = null;
 
     mCh1EqHi = null;
     mCh2EqHi = null;
@@ -222,5 +266,50 @@ public class KnobControlFragment extends Fragment {
     mCh2dBMid = null;
     mCh1dBLow = null;
     mCh2dBLow = null;
+
+    mUIUpdateThread = null;
+  }
+
+  private class UIUpdateThread extends Thread {
+
+    @Override
+    public void run() {
+      //super.run();
+
+      while (true) {
+        if (((MainActivity) getActivity()).isUpdateUI(1)) {
+          MyLog.d("DEBUG", "ui thread1...");
+
+          mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+              ((MainActivity) getActivity()).resetUpdateUIFlag(1);
+              isUpdatingUI = true;
+
+              mCh1EqHi.setProgress(((MainActivity) getActivity()).getDspSetting(3));
+              mCh2EqHi.setProgress(((MainActivity) getActivity()).getDspSetting(4));
+              mCh1EqMid.setProgress(((MainActivity) getActivity()).getDspSetting(5));
+              mCh2EqMid.setProgress(((MainActivity) getActivity()).getDspSetting(6));
+              mCh1EqLow.setProgress(((MainActivity) getActivity()).getDspSetting(7));
+              mCh2EqLow.setProgress(((MainActivity) getActivity()).getDspSetting(8));
+
+              mHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                  MyLog.d("DEBUG", "ui thread stop1");
+                  isUpdatingUI = false;
+                }
+              }, 500);
+            }
+          });
+        }
+
+        try {
+          Thread.sleep(100);
+        } catch(InterruptedException e) {
+          e.printStackTrace();
+        }
+      }
+    }
   }
 }

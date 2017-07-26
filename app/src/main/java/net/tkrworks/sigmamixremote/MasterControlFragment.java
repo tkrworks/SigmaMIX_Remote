@@ -23,6 +23,7 @@ package net.tkrworks.sigmamixremote;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -36,6 +37,8 @@ import static net.tkrworks.sigmamixremote.MyTextViewControl.*;
 
 public class MasterControlFragment extends Fragment {
 
+  private Handler mHandler;
+
   private SeekArc mMasterGain;
   private SeekArc mBoothGain;
   private SeekArc mMonitorSelect;
@@ -44,6 +47,10 @@ public class MasterControlFragment extends Fragment {
   private TextView mBoothdB;
   private TextView mSelectRate;
   private TextView mMonitordB;
+
+  private UIUpdateThread mUIUpdateThread;
+
+  private boolean isUpdatingUI = false;
 
   public static MasterControlFragment newInstance() {
     MasterControlFragment fragment = new MasterControlFragment();
@@ -67,12 +74,17 @@ public class MasterControlFragment extends Fragment {
   public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
 
+    mHandler = new Handler();
+
     mMasterGain = (SeekArc) view.findViewById(R.id.master);
     mMasterGain.setOnSeekArcChangeListener(new OnSeekArcChangeListener() {
       @Override
       public void onProgressChanged(SeekArc seekArc, int i, boolean b) {
         //MyLog.d("DEBUG", "progress::ch1 gain = %d", i);
-        ((MainActivity) getActivity()).adjustMasterBoothGain(seekArc.getProgress(), mBoothGain.getProgress());
+        if (!isUpdatingUI) {
+          ((MainActivity) getActivity())
+              .adjustMasterBoothGain(seekArc.getProgress(), mBoothGain.getProgress());
+        }
         setDecibel(mMasterdB, i, -120, 15);
       }
 
@@ -84,7 +96,10 @@ public class MasterControlFragment extends Fragment {
       @Override
       public void onStopTrackingTouch(SeekArc seekArc) {
         //MyLog.d("DEBUG", "stop::ch1 gain = %d", seekArc.getProgress());
-        ((MainActivity) getActivity()).adjustMasterBoothGain(mMasterGain.getProgress(), mBoothGain.getProgress());
+        if (!isUpdatingUI) {
+          ((MainActivity) getActivity())
+              .adjustMasterBoothGain(mMasterGain.getProgress(), mBoothGain.getProgress());
+        }
         setDecibel(mMasterdB, seekArc.getProgress(), -120, 15);
       }
     });
@@ -94,7 +109,9 @@ public class MasterControlFragment extends Fragment {
       @Override
       public void onProgressChanged(SeekArc seekArc, int i, boolean b) {
         //MyLog.d("DEBUG", "progress::ch1 gain = %d", i);
-        ((MainActivity) getActivity()).adjustMasterBoothGain(mMasterGain.getProgress(), i);
+        if (!isUpdatingUI) {
+          ((MainActivity) getActivity()).adjustMasterBoothGain(mMasterGain.getProgress(), i);
+        }
         setDecibel(mBoothdB, i, -120, 15);
       }
 
@@ -106,7 +123,10 @@ public class MasterControlFragment extends Fragment {
       @Override
       public void onStopTrackingTouch(SeekArc seekArc) {
         //MyLog.d("DEBUG", "stop::ch1 gain = %d", seekArc.getProgress());
-        ((MainActivity) getActivity()).adjustMasterBoothGain(mMasterGain.getProgress(), mBoothGain.getProgress());
+        if (!isUpdatingUI) {
+          ((MainActivity) getActivity())
+              .adjustMasterBoothGain(mMasterGain.getProgress(), mBoothGain.getProgress());
+        }
         setDecibel(mBoothdB, seekArc.getProgress(), -120, 15);
       }
     });
@@ -116,7 +136,9 @@ public class MasterControlFragment extends Fragment {
       @Override
       public void onProgressChanged(SeekArc seekArc, int i, boolean b) {
         //MyLog.d("DEBUG", "progress::ch1 gain = %d", i);
-        ((MainActivity) getActivity()).adjustMonitorSelectLevel(i, mMonitorSelect.getProgress());
+        if (!isUpdatingUI) {
+          ((MainActivity) getActivity()).adjustMonitorSelectLevel(i, mMonitorSelect.getProgress());
+        }
       }
 
       @Override
@@ -127,7 +149,10 @@ public class MasterControlFragment extends Fragment {
       @Override
       public void onStopTrackingTouch(SeekArc seekArc) {
         //MyLog.d("DEBUG", "stop::ch1 gain = %d", seekArc.getProgress());
-        ((MainActivity) getActivity()).adjustMonitorSelectLevel(mMonitorSelect.getProgress(), mMonitorLevel.getProgress());
+        if (!isUpdatingUI) {
+          ((MainActivity) getActivity())
+              .adjustMonitorSelectLevel(mMonitorSelect.getProgress(), mMonitorLevel.getProgress());
+        }
       }
     });
 
@@ -136,7 +161,9 @@ public class MasterControlFragment extends Fragment {
       @Override
       public void onProgressChanged(SeekArc seekArc, int i, boolean b) {
         //MyLog.d("DEBUG", "progress::ch1 gain = %d", i);
-        ((MainActivity) getActivity()).adjustMonitorSelectLevel(mMonitorSelect.getProgress(), i);
+        if (!isUpdatingUI) {
+          ((MainActivity) getActivity()).adjustMonitorSelectLevel(mMonitorSelect.getProgress(), i);
+        }
         setDecibel(mMonitordB, i, -120, 15);
       }
 
@@ -148,7 +175,10 @@ public class MasterControlFragment extends Fragment {
       @Override
       public void onStopTrackingTouch(SeekArc seekArc) {
         //MyLog.d("DEBUG", "stop::ch1 gain = %d", seekArc.getProgress());
-        ((MainActivity) getActivity()).adjustMonitorSelectLevel(mMonitorSelect.getProgress(), mMonitorLevel.getProgress());
+        if (!isUpdatingUI) {
+          ((MainActivity) getActivity())
+              .adjustMonitorSelectLevel(mMonitorSelect.getProgress(), mMonitorLevel.getProgress());
+        }
         setDecibel(mMonitordB, seekArc.getProgress(), -120, 15);
       }
     });
@@ -157,6 +187,9 @@ public class MasterControlFragment extends Fragment {
     mBoothdB = (TextView) view.findViewById(R.id.booth_db);
     mSelectRate = (TextView) view.findViewById(R.id.select_rate);
     mMonitordB = (TextView) view.findViewById(R.id.monitor_db);
+
+    mUIUpdateThread = new UIUpdateThread();
+    mUIUpdateThread.start();
   }
 
   @Override
@@ -169,6 +202,8 @@ public class MasterControlFragment extends Fragment {
   public void onDetach() {
     super.onDetach();
 
+    mHandler = null;
+
     mMasterGain = null;
     mBoothGain = null;
     mMonitorSelect = null;
@@ -177,5 +212,48 @@ public class MasterControlFragment extends Fragment {
     mBoothdB = null;
     mSelectRate = null;
     mMonitordB = null;
+
+    mUIUpdateThread = null;
+  }
+
+  private class UIUpdateThread extends Thread {
+
+    @Override
+    public void run() {
+      //super.run();
+
+      while (true) {
+        if (((MainActivity) getActivity()).isUpdateUI(3)) {
+          MyLog.d("DEBUG", "ui thread3...");
+
+          mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+              ((MainActivity) getActivity()).resetUpdateUIFlag(3);
+              isUpdatingUI = true;
+
+              mMasterGain.setProgress(((MainActivity) getActivity()).getDspSetting(13));
+              mBoothGain.setProgress(((MainActivity) getActivity()).getDspSetting(14));
+              mMonitorSelect.setProgress(((MainActivity) getActivity()).getDspSetting(15));
+              mMonitorLevel.setProgress(((MainActivity) getActivity()).getDspSetting(16));
+
+              mHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                  MyLog.d("DEBUG", "ui thread stop3");
+                  isUpdatingUI = false;
+                }
+              }, 500);
+            }
+          });
+        }
+
+        try {
+          Thread.sleep(100);
+        } catch(InterruptedException e) {
+          e.printStackTrace();
+        }
+      }
+    }
   }
 }

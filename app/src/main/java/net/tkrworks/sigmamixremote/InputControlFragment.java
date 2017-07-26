@@ -23,6 +23,7 @@ package net.tkrworks.sigmamixremote;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -42,6 +43,8 @@ import static net.tkrworks.sigmamixremote.MyTextViewControl.*;
 
 public class InputControlFragment extends Fragment {
 
+  private Handler mHandler;
+
   private Switch mCh1LinePhonoSw;
   private Switch mCh2LinePhonoSw;
   private SeekArc mCh1InputGain;
@@ -49,6 +52,10 @@ public class InputControlFragment extends Fragment {
   private TextView mCh1dB;
   private TextView mCh2dB;
   private Spinner mFxType;
+
+  private UIUpdateThread mUIUpdateThread;
+
+  private boolean isUpdatingUI = false;
 
   public static InputControlFragment newInstance() {
     InputControlFragment fragment = new InputControlFragment();
@@ -73,11 +80,17 @@ public class InputControlFragment extends Fragment {
   public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
 
+    MyLog.d("DEBUG", "INPUT:: onViewCreated");
+
+    mHandler = new Handler();
+
     mCh1LinePhonoSw = (Switch) view.findViewById(R.id.ch1_sw);
     mCh1LinePhonoSw.setOnCheckedChangeListener(new OnCheckedChangeListener() {
       @Override
       public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        ((MainActivity) getActivity()).switchLinePhono(isChecked, mCh2LinePhonoSw.isChecked());
+        if (!isUpdatingUI) {
+          ((MainActivity) getActivity()).switchLinePhono(isChecked, mCh2LinePhonoSw.isChecked());
+        }
       }
     });
 
@@ -85,7 +98,9 @@ public class InputControlFragment extends Fragment {
     mCh2LinePhonoSw.setOnCheckedChangeListener(new OnCheckedChangeListener() {
       @Override
       public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        ((MainActivity) getActivity()).switchLinePhono(mCh1LinePhonoSw.isChecked(), isChecked);
+        if (!isUpdatingUI) {
+          ((MainActivity) getActivity()).switchLinePhono(mCh1LinePhonoSw.isChecked(), isChecked);
+        }
       }
     });
 
@@ -94,7 +109,9 @@ public class InputControlFragment extends Fragment {
       @Override
       public void onProgressChanged(SeekArc seekArc, int i, boolean b) {
         //MyLog.d("DEBUG", "progress::ch1 gain = %d", i);
-        ((MainActivity) getActivity()).adjustInputGain(i, mCh2InputGain.getProgress());
+        if (!isUpdatingUI) {
+          ((MainActivity) getActivity()).adjustInputGain(i, mCh2InputGain.getProgress());
+        }
         setDecibel(mCh1dB, i, -15, 15);
       }
 
@@ -106,7 +123,10 @@ public class InputControlFragment extends Fragment {
       @Override
       public void onStopTrackingTouch(SeekArc seekArc) {
         //MyLog.d("DEBUG", "stop::ch1 gain = %d", seekArc.getProgress());
-        ((MainActivity) getActivity()).adjustInputGain(mCh1InputGain.getProgress(), mCh2InputGain.getProgress());
+        if (!isUpdatingUI) {
+          ((MainActivity) getActivity())
+              .adjustInputGain(mCh1InputGain.getProgress(), mCh2InputGain.getProgress());
+        }
         setDecibel(mCh1dB, mCh1InputGain.getProgress(), -15, 15);
       }
     });
@@ -115,7 +135,9 @@ public class InputControlFragment extends Fragment {
     mCh2InputGain.setOnSeekArcChangeListener(new OnSeekArcChangeListener() {
       @Override
       public void onProgressChanged(SeekArc seekArc, int i, boolean b) {
-        ((MainActivity) getActivity()).adjustInputGain(mCh1InputGain.getProgress(), i);
+        if (!isUpdatingUI) {
+          ((MainActivity) getActivity()).adjustInputGain(mCh1InputGain.getProgress(), i);
+        }
         setDecibel(mCh2dB, i, -15, 15);
       }
 
@@ -126,7 +148,10 @@ public class InputControlFragment extends Fragment {
 
       @Override
       public void onStopTrackingTouch(SeekArc seekArc) {
-        ((MainActivity) getActivity()).adjustInputGain(mCh1InputGain.getProgress(), mCh2InputGain.getProgress());
+        if (!isUpdatingUI) {
+          ((MainActivity) getActivity())
+              .adjustInputGain(mCh1InputGain.getProgress(), mCh2InputGain.getProgress());
+        }
         setDecibel(mCh2dB, mCh2InputGain.getProgress(), -15, 15);
       }
     });
@@ -138,7 +163,9 @@ public class InputControlFragment extends Fragment {
     mFxType.setOnItemSelectedListener(new OnItemSelectedListener() {
       @Override
       public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        ((MainActivity) getActivity()).selectEffectType(position);
+        if (!isUpdatingUI) {
+          ((MainActivity) getActivity()).selectEffectType(position);
+        }
       }
 
       @Override
@@ -146,6 +173,9 @@ public class InputControlFragment extends Fragment {
 
       }
     });
+
+    mUIUpdateThread = new UIUpdateThread();
+    mUIUpdateThread.start();
   }
 
   @Override
@@ -160,11 +190,57 @@ public class InputControlFragment extends Fragment {
 
     MyLog.d("DEBUG", "INPUT:: onDetach");
 
+    mHandler = null;
+
     mCh1LinePhonoSw = null;
     mCh2LinePhonoSw = null;
     mCh1InputGain = null;
     mCh2InputGain = null;
     mCh1dB = null;
     mCh2dB = null;
+
+    mUIUpdateThread = null;
+  }
+
+  private class UIUpdateThread extends Thread {
+
+    @Override
+    public void run() {
+      //super.run();
+
+      while (true) {
+        if (((MainActivity) getActivity()).isUpdateUI(0)) {
+          MyLog.d("DEBUG", "ui thread0...");
+
+          mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+              ((MainActivity) getActivity()).resetUpdateUIFlag(0);
+              isUpdatingUI = true;
+
+              mCh1LinePhonoSw.setChecked((((MainActivity) getActivity()).getDspSetting(0) >> 4 & 0x01) == 0x01);
+              mCh2LinePhonoSw.setChecked((((MainActivity) getActivity()).getDspSetting(0) & 0x01) == 0x01);
+              mCh1InputGain.setProgress(((MainActivity) getActivity()).getDspSetting(1));
+              mCh2InputGain.setProgress(((MainActivity) getActivity()).getDspSetting(2));
+              mFxType.setSelection(((MainActivity) getActivity()).getDspSetting(17));
+
+              mHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                  MyLog.d("DEBUG", "ui thread stop3");
+                  isUpdatingUI = false;
+                }
+              }, 500);
+            }
+          });
+        }
+
+        try {
+          Thread.sleep(100);
+        } catch(InterruptedException e) {
+          e.printStackTrace();
+        }
+      }
+    }
   }
 }

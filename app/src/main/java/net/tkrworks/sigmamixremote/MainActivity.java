@@ -102,13 +102,39 @@ public class MainActivity extends AppCompatActivity {
   private TabLayout tabLayout;
   private ProgressDialog sigmaScanProgressDialog;
   private SeekBar xfaderBar;
+  private PagerAdapter pagerAdapter;
 
   private Handler mHandler;
 
   private boolean isConnectedBLE = false;
+  private boolean isInitializedBLE = false;
+  private boolean[] isUpdateUI = {false, false, false, false};
 
   private int currentXfaderPosition = 127;
   private int prevXfaderPosition = 127;
+
+  private byte[] dspSettings;
+
+  public int getDspSetting(int index) {
+    if (dspSettings[index] < 0)
+      return dspSettings[index] + 256;
+    else
+      return dspSettings[index];
+  }
+
+  public void setDspSetting(int index, int value) {
+    MyLog.d("DEBUG", "%d -> %d %d", (byte) value, value);
+
+    //dspSettings[index] = (byte) value;
+  }
+
+  public boolean isUpdateUI(int index) {
+    return isUpdateUI[index];
+  }
+
+  public void resetUpdateUIFlag(int index) {
+    isUpdateUI[index] = false;
+  }
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -135,9 +161,9 @@ public class MainActivity extends AppCompatActivity {
     tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
     final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
-    final PagerAdapter adapter = new PagerAdapter
-        (getSupportFragmentManager(), tabLayout.getTabCount());
-    viewPager.setAdapter(adapter);
+    //final PagerAdapter adapter = new PagerAdapter
+    pagerAdapter = new PagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount());
+    viewPager.setAdapter(pagerAdapter);
     viewPager.setOffscreenPageLimit(4);
     viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
     tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
@@ -532,20 +558,22 @@ public class MainActivity extends AppCompatActivity {
   }
 
   void readCurrentSettings() {
-    byte[] value = new byte[1];
-    value[0] = (byte)(2);
+    //byte[] value = new byte[1];
+    //value[0] = (byte)(2);
 
-    MyLog.d("DEBUG", "Settings Write = %d", value[0]);
+    //MyLog.d("DEBUG", "Settings Write = %d", value[0]);
+    MyLog.d("DEBUG", "Settings Read");
 
     if (isConnectedBLE) {
-      mSettingWriteCharacteristic.setValue(value);
-      mBleGatt.writeCharacteristic(mSettingWriteCharacteristic);
+      //mSettingWriteCharacteristic.setValue(value);
+      //mBleGatt.writeCharacteristic(mSettingWriteCharacteristic);
+      mBleGatt.readCharacteristic(mSettingReadCharacteristic);
     }
   }
 
   void resetCurrentSettings() {
     byte[] value = new byte[1];
-    value[0] = (byte)(-1);
+    value[0] = (byte)(3);
 
     MyLog.d("DEBUG", "Settings Write = %d", value[0]);
 
@@ -594,6 +622,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         isConnectedBLE = false;
+        isInitializedBLE = false;
         //is_completed_char_conf = 0;
 
         invalidateOptionsMenu();
@@ -686,7 +715,18 @@ public class MainActivity extends AppCompatActivity {
         int status) {
       super.onCharacteristicRead(gatt, characteristic, status);
 
-      MyLog.d("DEBUG", "characteristic read");
+      MyLog.d("DEBUG", "characteristic read %s", characteristic.getUuid().toString());
+
+      dspSettings = characteristic.getValue();
+      int index = 0;
+      for (byte value : dspSettings) {
+        MyLog.d("DEBUG", "  value[%d] = %02X(%d)", index, value, value);
+        index++;
+      }
+
+      for (int i = 0; i < 4; i++) {
+        isUpdateUI[i] = true;
+      }
     }
 
     @Override
@@ -744,7 +784,20 @@ public class MainActivity extends AppCompatActivity {
         int status) {
       super.onDescriptorWrite(gatt, descriptor, status);
 
-      MyLog.d("DEBUG", "characteristic write");
+      MyLog.d("DEBUG", "descriptor write");
+
+      if (!isInitializedBLE) {
+        isInitializedBLE = true;
+
+        MyLog.d("DEBUG", "read...");
+
+        mHandler.postDelayed(new Runnable() {
+          @Override
+          public void run() {
+            readCurrentSettings();
+          }
+        }, 500);
+      }
     }
   };
 
