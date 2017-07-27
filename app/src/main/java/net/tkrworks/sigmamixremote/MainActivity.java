@@ -554,6 +554,10 @@ public class MainActivity extends AppCompatActivity {
     if (isConnectedBLE) {
       mSettingWriteCharacteristic.setValue(value);
       mBleGatt.writeCharacteristic(mSettingWriteCharacteristic);
+
+      Toast.makeText(MainActivity.this, "Save current parameters", Toast.LENGTH_SHORT).show();
+    } else {
+      Toast.makeText(MainActivity.this, "No BLE connection.", Toast.LENGTH_SHORT).show();
     }
   }
 
