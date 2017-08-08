@@ -522,22 +522,23 @@ public class MainActivity extends AppCompatActivity {
 
     MyLog.d("DEBUG", "Effect Selector = %02x", value[0]);
 
-    if (isConnectedBLE) {
+    if (isConnectedBLE && mBleGatt != null && mEffectSelectorCharacteristic != null) {
       mEffectSelectorCharacteristic.setValue(value);
       mBleGatt.writeCharacteristic(mEffectSelectorCharacteristic);
     }
   }
 
-  void adjustMonitorSelectLevel(int select_value, int level_value) {
+  void adjustMonitorSelectLevel(boolean ch_val, int select_value, int level_value) {
     byte[] value = new byte[6];
-    value[5] = (byte)((select_value >> 16) & 0xFF);
-    value[4] = (byte)((select_value >> 8) & 0xFF);
-    value[3] = (byte)(select_value & 0xFF);
-    value[2] = (byte)((level_value >> 16) & 0xFF);
-    value[1] = (byte)((level_value >> 8) & 0xFF);
-    value[0] = (byte)(level_value & 0xFF);
+    //value[2] = (byte)((select_value >> 16) & 0xFF);
+    value[2] = (byte) (ch_val ? 1 : 0);
+    value[1] = (byte)((select_value >> 8) & 0xFF);
+    value[0] = (byte)(select_value & 0xFF);
+    value[5] = (byte)((level_value >> 16) & 0xFF);
+    value[4] = (byte)((level_value >> 8) & 0xFF);
+    value[3] = (byte)(level_value & 0xFF);
 
-    MyLog.d("DEBUG", "Monitor Select/Level = %d:[%02x, %02x, %02x] %d:[%02x, %02x, %02x]", select_value, value[5], value[4], value[3], level_value, value[2], value[1], value[0]);
+    MyLog.d("DEBUG", "Monitor Select/Level = %d:[%02x, %02x, %02x] %d:[%02x, %02x, %02x]", select_value, value[2], value[1], value[0], level_value, value[5], value[4], value[3]);
 
     if (isConnectedBLE) {
       mMonitorSelectLevelCharacteristic.setValue(value);

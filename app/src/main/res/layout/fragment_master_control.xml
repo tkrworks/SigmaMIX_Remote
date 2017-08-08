@@ -130,8 +130,9 @@
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:padding="30dp"
-          seekarc:enabled="false"
+          seekarc:enabled="true"
           seekarc:max="255"
+          seekarc:progress="127"
           seekarc:progressColor="#ffa000"
           seekarc:progressWidth="2dp"
           seekarc:rotation="180"
@@ -215,8 +216,8 @@
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:padding="30dp"
-          seekarc:max="255"
-          seekarc:progress="127"
+          seekarc:max="127"
+          seekarc:progress="64"
           seekarc:progressColor="#ffa000"
           seekarc:progressWidth="2dp"
           seekarc:rotation="180"
@@ -271,11 +272,31 @@
         android:layout_weight="0.2"/>
     </LinearLayout>
 
-    <Space
-      android:id="@+id/space_v4"
+    <LinearLayout
       android:layout_width="match_parent"
       android:layout_height="0dip"
-      android:layout_weight="0.2"/>
+      android:layout_weight="0.2"
+      android:orientation="horizontal">
+      <Space
+        android:layout_width="0dip"
+        android:layout_height="match_parent"
+        android:layout_weight="0.2"/>
+      <Switch
+        android:id="@+id/monitor_ch_sw"
+        android:layout_width="0dip"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="MONITOR CH."
+        android:textColor="#bdbdbd"/>
+      <Space
+        android:layout_width="0dip"
+        android:layout_height="match_parent"
+        android:layout_weight="0.2"/>
+      <Space
+        android:layout_width="0dip"
+        android:layout_height="match_parent"
+        android:layout_weight="1.2"/>
+    </LinearLayout>
   </LinearLayout>
 
 </RelativeLayout>

@@ -29,6 +29,9 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
+import android.widget.Switch;
 import android.widget.TextView;
 import com.triggertrap.seekarc.SeekArc;
 import com.triggertrap.seekarc.SeekArc.OnSeekArcChangeListener;
@@ -45,8 +48,8 @@ public class MasterControlFragment extends Fragment {
   private SeekArc mMonitorLevel;
   private TextView mMasterdB;
   private TextView mBoothdB;
-  private TextView mSelectRate;
   private TextView mMonitordB;
+  private Switch mMonitorCh;
 
   private UIUpdateThread mUIUpdateThread;
 
@@ -137,7 +140,7 @@ public class MasterControlFragment extends Fragment {
       public void onProgressChanged(SeekArc seekArc, int i, boolean b) {
         //MyLog.d("DEBUG", "progress::ch1 gain = %d", i);
         if (!isUpdatingUI) {
-          ((MainActivity) getActivity()).adjustMonitorSelectLevel(i, mMonitorSelect.getProgress());
+          ((MainActivity) getActivity()).adjustMonitorSelectLevel(mMonitorCh.isChecked(), i, mMonitorLevel.getProgress());
         }
       }
 
@@ -151,7 +154,7 @@ public class MasterControlFragment extends Fragment {
         //MyLog.d("DEBUG", "stop::ch1 gain = %d", seekArc.getProgress());
         if (!isUpdatingUI) {
           ((MainActivity) getActivity())
-              .adjustMonitorSelectLevel(mMonitorSelect.getProgress(), mMonitorLevel.getProgress());
+              .adjustMonitorSelectLevel(mMonitorCh.isChecked(), mMonitorSelect.getProgress(), mMonitorLevel.getProgress());
         }
       }
     });
@@ -162,7 +165,7 @@ public class MasterControlFragment extends Fragment {
       public void onProgressChanged(SeekArc seekArc, int i, boolean b) {
         //MyLog.d("DEBUG", "progress::ch1 gain = %d", i);
         if (!isUpdatingUI) {
-          ((MainActivity) getActivity()).adjustMonitorSelectLevel(mMonitorSelect.getProgress(), i);
+          ((MainActivity) getActivity()).adjustMonitorSelectLevel(mMonitorCh.isChecked(), mMonitorSelect.getProgress(), i);
         }
         setDecibel(mMonitordB, i, -120, 15);
       }
@@ -177,7 +180,7 @@ public class MasterControlFragment extends Fragment {
         //MyLog.d("DEBUG", "stop::ch1 gain = %d", seekArc.getProgress());
         if (!isUpdatingUI) {
           ((MainActivity) getActivity())
-              .adjustMonitorSelectLevel(mMonitorSelect.getProgress(), mMonitorLevel.getProgress());
+              .adjustMonitorSelectLevel(mMonitorCh.isChecked(), mMonitorSelect.getProgress(), mMonitorLevel.getProgress());
         }
         setDecibel(mMonitordB, seekArc.getProgress(), -120, 15);
       }
@@ -185,8 +188,17 @@ public class MasterControlFragment extends Fragment {
 
     mMasterdB = (TextView) view.findViewById(R.id.master_db);
     mBoothdB = (TextView) view.findViewById(R.id.booth_db);
-    mSelectRate = (TextView) view.findViewById(R.id.select_rate);
     mMonitordB = (TextView) view.findViewById(R.id.monitor_db);
+
+    mMonitorCh = (Switch) view.findViewById(R.id.monitor_ch_sw);
+    mMonitorCh.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+      @Override
+      public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        if (!isUpdatingUI) {
+          ((MainActivity) getActivity()).adjustMonitorSelectLevel(isChecked, mMonitorSelect.getProgress(), mMonitorLevel.getProgress());
+        }
+      }
+    });
 
     mUIUpdateThread = new UIUpdateThread();
     mUIUpdateThread.start();
@@ -210,8 +222,8 @@ public class MasterControlFragment extends Fragment {
     mMonitorLevel = null;
     mMasterdB = null;
     mBoothdB = null;
-    mSelectRate = null;
     mMonitordB = null;
+    mMonitorCh = null;
 
     mUIUpdateThread = null;
   }
@@ -224,7 +236,7 @@ public class MasterControlFragment extends Fragment {
 
       while (true) {
         if (((MainActivity) getActivity()).isUpdateUI(3)) {
-          MyLog.d("DEBUG", "ui thread3...");
+          MyLog.d("DEBUG", "ui thread3... %06X", ((MainActivity) getActivity()).getDspSetting(15));
 
           mHandler.post(new Runnable() {
             @Override
@@ -234,7 +246,8 @@ public class MasterControlFragment extends Fragment {
 
               mMasterGain.setProgress(((MainActivity) getActivity()).getDspSetting(13));
               mBoothGain.setProgress(((MainActivity) getActivity()).getDspSetting(14));
-              mMonitorSelect.setProgress(((MainActivity) getActivity()).getDspSetting(15));
+              mMonitorCh.setChecked(((((MainActivity) getActivity()).getDspSetting(15) >> 7) & 0x01) == 0x01);
+              mMonitorSelect.setProgress(((MainActivity) getActivity()).getDspSetting(15) & 0x7F);
               mMonitorLevel.setProgress(((MainActivity) getActivity()).getDspSetting(16));
 
               mHandler.postDelayed(new Runnable() {
