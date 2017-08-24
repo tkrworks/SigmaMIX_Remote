@@ -1,5 +1,5 @@
 /*
- * Copylight (C) 2017, Shunichi Yamamoto, tkrworks.net
+ * Copyright (C) 2017, Shunichi Yamamoto, tkrworks.net
  *
  * This file is part of SigmaMIX Remote.
  *
@@ -91,6 +91,7 @@ public class MainActivity extends AppCompatActivity {
   private BluetoothGattCharacteristic mMasterBoothGainCharacteristic;
   private BluetoothGattCharacteristic mMonitorSelectLevelCharacteristic;
   private BluetoothGattCharacteristic mEffectSelectorCharacteristic;
+  private BluetoothGattCharacteristic mDelayParamsCharacteristic;
   private BluetoothGattCharacteristic mSettingWriteCharacteristic;
   private BluetoothGattCharacteristic mSettingReadCharacteristic;
 
@@ -528,6 +529,19 @@ public class MainActivity extends AppCompatActivity {
     }
   }
 
+  void adjustDelayParams(int delay_time, int feedback_gain) {
+    byte[] value = new byte[2];
+    value[0] = (byte)(delay_time & 0xFF);
+    value[1] = (byte)(feedback_gain & 0xFF);
+
+    MyLog.d("DEBUG", "Delay Params = %d:[%02x] %d:[%02x]", delay_time, value[0], feedback_gain, value[1]);
+
+    if (isConnectedBLE) {
+      mDelayParamsCharacteristic.setValue(value);
+      mBleGatt.writeCharacteristic(mDelayParamsCharacteristic);
+    }
+  }
+
   void adjustMonitorSelectLevel(boolean ch_val, int select_value, int level_value) {
     byte[] value = new byte[6];
     //value[2] = (byte)((select_value >> 16) & 0xFF);
@@ -705,6 +719,8 @@ public class MainActivity extends AppCompatActivity {
                   mEffectSelectorCharacteristic = characteristic;
                 } else if (getString(R.string.SETTINGS_WRITE_CHARACTERISTIC_UUID).equals(characteristic.getUuid().toString())) {
                   mSettingWriteCharacteristic = characteristic;
+                } else if (getString(R.string.DELAY_PARAMS_CHARACTERISTIC_UUID).equals(characteristic.getUuid().toString())) {
+                  mDelayParamsCharacteristic = characteristic;
                 } else if (getString(R.string.SETTINGS_READ_CHARACTERISTIC_UUID).equals(characteristic.getUuid().toString())) {
                   mSettingReadCharacteristic = characteristic;
                 }

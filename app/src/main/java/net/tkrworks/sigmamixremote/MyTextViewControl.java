@@ -1,5 +1,5 @@
 /*
- * Copylight (C) 2017, Shunichi Yamamoto, tkrworks.net
+ * Copyright (C) 2017, Shunichi Yamamoto, tkrworks.net
  *
  * This file is part of SigmaMIX Remote.
  *
@@ -39,5 +39,21 @@ class MyTextViewControl {
       currentDecibel = (int) Math.round((0.0 - currentRate) * dBMin);
       textview.setText(String.format(Locale.US, "%ddB", currentDecibel));
     }
+  }
+
+  static void setDecibel2(TextView textview, int val, int dBMin, int dBMax) {
+    double currentRate = val / 255.0;
+    int currentDecibel = (int) Math.round((currentRate) * (dBMax - dBMin) + dBMin);
+    if (currentRate >= 0.0) {
+      textview.setText(String.format(Locale.US, "%ddB", currentDecibel));
+    } else {
+      textview.setText(String.format(Locale.US, "%ddB", currentDecibel));
+    }
+  }
+
+  static void setMilliSeconds(TextView textview, int val, int msMin, int msMax) {
+    double currentRate = val / 225.0;
+    double currentMsec = (int)((currentRate * (msMax - msMin)) * 100.0) / 100.0;
+    textview.setText(String.format(Locale.US, "%.02fms", currentMsec));
   }
 }

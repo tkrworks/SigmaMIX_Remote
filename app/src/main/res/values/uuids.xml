@@ -2,7 +2,7 @@
 
 <!--
  *
- * Copylight (C) 2017, Shunichi Yamamoto, tkrworks.net
+ * Copyright (C) 2017, Shunichi Yamamoto, tkrworks.net
  *
  * This file is part of SigmaMIX Remote.
  *
@@ -38,6 +38,7 @@
   <string name="MASTER_BOOTH_GAIN_CHARACTERISTIC_UUID">9f5c0ec8-006e-4c1a-bc03-092a38ea0134</string>
   <string name="MONITOR_SETTING_CHARACTERISTIC_UUID">cc3d79bf-4dc0-498d-92d8-210af7ddb13f</string>
   <string name="EFFECT_SELECTOR_CHARACTERISTIC_UUID">a57df03d-c72f-42da-8507-90cc5f48173f</string>
+  <string name="DELAY_PARAMS_CHARACTERISTIC_UUID">4e3a1b45-63af-4972-93cd-370cfa211171</string>
   <string name="SETTINGS_WRITE_CHARACTERISTIC_UUID">1e28f515-0dd6-486c-a5f0-9a2c53d3d309</string>
   <string name="SETTINGS_READ_CHARACTERISTIC_UUID">13fb5580-85b2-4b83-b160-1fca96aea6c1</string>
 

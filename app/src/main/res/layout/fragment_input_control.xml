@@ -1,6 +1,6 @@
 <!--
  *
- * Copylight (C) 2017, Shunichi Yamamoto, tkrworks.net
+ * Copyright (C) 2017, Shunichi Yamamoto, tkrworks.net
  *
  * This file is part of SigmaMIX Remote.
  *
@@ -31,15 +31,14 @@
 
   <!-- TODO: Update blank fragment layout -->
   <LinearLayout
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:orientation="vertical">
 
     <Space
-      android:id="@+id/space_v0"
       android:layout_width="match_parent"
       android:layout_height="0dip"
-      android:layout_weight="0.5"/>
+      android:layout_weight="0.2"/>
 
     <LinearLayout
       android:layout_width="match_parent"
@@ -47,7 +46,6 @@
       android:layout_weight="0.2"
       android:orientation="horizontal">
       <Space
-        android:id="@+id/space0"
         android:layout_width="0dip"
         android:layout_height="match_parent"
         android:layout_weight="0.2"/>
@@ -60,7 +58,6 @@
         android:textColor="#bdbdbd"
         />
       <Space
-        android:id="@+id/space1"
         android:layout_width="0dip"
         android:layout_height="match_parent"
         android:layout_weight="0.2"/>
@@ -72,14 +69,12 @@
         android:text="LINE / PHONO"
         android:textColor="#bdbdbd"/>
       <Space
-        android:id="@+id/space2"
         android:layout_width="0dip"
         android:layout_height="match_parent"
         android:layout_weight="0.2"/>
     </LinearLayout>
 
     <Space
-      android:id="@+id/space_v1"
       android:layout_width="match_parent"
       android:layout_height="0dip"
       android:layout_weight="0.1"/>
@@ -121,12 +116,11 @@
     </LinearLayout>
 
     <LinearLayout
-      android:layout_width="wrap_content"
+      android:layout_width="match_parent"
       android:layout_height="0dip"
       android:layout_weight="0.6"
       android:orientation="horizontal">
       <Space
-        android:id="@+id/space3"
         android:layout_width="0dip"
         android:layout_height="match_parent"
         android:layout_weight="0.2"/>
@@ -158,7 +152,6 @@
           android:textSize="20sp"/>
       </FrameLayout>
       <Space
-        android:id="@+id/space4"
         android:layout_width="0dip"
         android:layout_height="match_parent"
         android:layout_weight="0.2"/>
@@ -190,14 +183,12 @@
           android:textSize="20sp"/>
       </FrameLayout>
       <Space
-        android:id="@+id/space5"
         android:layout_width="0dip"
         android:layout_height="match_parent"
         android:layout_weight="0.2"/>
     </LinearLayout>
 
     <Space
-      android:id="@+id/space_v2"
       android:layout_width="match_parent"
       android:layout_height="0dip"
       android:layout_weight="0.1"/>
@@ -227,16 +218,118 @@
       </LinearLayout>
 
     <Space
-      android:id="@+id/space_v3"
       android:layout_width="match_parent"
       android:layout_height="0dip"
-      android:layout_weight="0.1"/>
+      android:layout_weight="0.2"/>
 
-    <Space
-      android:id="@+id/space_v4"
+    <LinearLayout
       android:layout_width="match_parent"
       android:layout_height="0dip"
-      android:layout_weight="0.1"/>
+      android:layout_weight="0.1"
+      android:layout_marginBottom="-30dp"
+      android:orientation="horizontal">
+      <Space
+        android:layout_width="0dip"
+        android:layout_height="match_parent"
+        android:layout_weight="0.4"/>
+      <TextView
+        android:layout_width="0dip"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_gravity="bottom"
+        android:text="DELAY TIME"
+        android:textAlignment="textEnd"
+        android:textColor="#bdbdbd"/>
+      <Space
+        android:layout_width="0dip"
+        android:layout_height="match_parent"
+        android:layout_weight="0"/>
+      <TextView
+        android:layout_width="0dip"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_gravity="bottom"
+        android:text="FB GAIN"
+        android:textAlignment="textEnd"
+        android:textColor="#bdbdbd"/>
+      <Space
+        android:layout_width="0dip"
+        android:layout_height="match_parent"
+        android:layout_weight="0.1"/>
+    </LinearLayout>
+
+    <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="0dip"
+      android:layout_weight="0.6"
+      android:orientation="horizontal">
+      <Space
+        android:layout_width="0dip"
+        android:layout_height="match_parent"
+        android:layout_weight="0.2"/>
+      <FrameLayout
+        android:layout_width="0dip"
+        android:layout_height="match_parent"
+        android:layout_weight="1">
+        <com.triggertrap.seekarc.SeekArc
+          android:id="@+id/delay_time"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:padding="30dp"
+          seekarc:max="225"
+          seekarc:progress="225"
+          seekarc:progressColor="#FFA000"
+          seekarc:progressWidth="2dp"
+          seekarc:rotation="180"
+          seekarc:startAngle="30"
+          seekarc:sweepAngle="300"
+          seekarc:thumb="@drawable/custom_seek_arc_control_selector"/>
+        <TextView
+          android:id="@+id/delay_msec"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_gravity="center"
+          android:text="300ms"
+          android:textColor="#BDBDBD"
+          android:textSize="20sp"/>
+      </FrameLayout>
+      <Space
+        android:id="@+id/space4"
+        android:layout_width="0dip"
+        android:layout_height="match_parent"
+        android:layout_weight="0.2"/>
+      <FrameLayout
+        android:layout_width="0dip"
+        android:layout_height="match_parent"
+        android:layout_weight="1">
+        <com.triggertrap.seekarc.SeekArc
+          android:id="@+id/fb_gain"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:padding="30dp"
+          seekarc:max="255"
+          seekarc:progress="230"
+          seekarc:progressColor="#FFA000"
+          seekarc:progressWidth="2dp"
+          seekarc:rotation="180"
+          seekarc:startAngle="30"
+          seekarc:sweepAngle="300"
+          seekarc:thumb="@drawable/custom_seek_arc_control_selector"/>
+        <TextView
+          android:id="@+id/fb_db"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_gravity="center"
+          android:text="-3dB"
+          android:textColor="#BDBDBD"
+          android:textSize="20sp"/>
+      </FrameLayout>
+      <Space
+        android:layout_width="0dip"
+        android:layout_height="match_parent"
+        android:layout_weight="0.2"/>
+    </LinearLayout>
+
   </LinearLayout>
 
 </RelativeLayout>

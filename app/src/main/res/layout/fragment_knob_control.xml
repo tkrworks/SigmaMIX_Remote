@@ -1,6 +1,6 @@
 <!--
  *
- * Copylight (C) 2017, Shunichi Yamamoto, tkrworks.net
+ * Copyright (C) 2017, Shunichi Yamamoto, tkrworks.net
  *
  * This file is part of SigmaMIX Remote.
  *
@@ -32,8 +32,8 @@
   <!-- TODO: Update blank fragment layout -->
 
   <LinearLayout
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:layout_alignParentStart="true"
     android:layout_alignParentTop="true"
     android:orientation="vertical">
@@ -80,7 +80,7 @@
     </LinearLayout>
 
     <LinearLayout
-      android:layout_width="wrap_content"
+      android:layout_width="match_parent"
       android:layout_height="0dip"
       android:layout_weight="1"
       android:orientation="horizontal">
@@ -94,7 +94,6 @@
         android:layout_weight="1">
         <com.triggertrap.seekarc.SeekArc
           android:id="@+id/ch1_hi"
-          id="@+id/ch1_eq_high"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:padding="30dp"
@@ -125,7 +124,6 @@
         android:layout_weight="1">
         <com.triggertrap.seekarc.SeekArc
           android:id="@+id/ch2_hi"
-          id="@+id/ch2_eq_high"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:padding="30dp"
@@ -189,7 +187,7 @@
     </LinearLayout>
 
     <LinearLayout
-      android:layout_width="wrap_content"
+      android:layout_width="match_parent"
       android:layout_height="0dip"
       android:layout_weight="1"
       android:orientation="horizontal">
@@ -203,7 +201,6 @@
         android:layout_weight="1">
         <com.triggertrap.seekarc.SeekArc
           android:id="@+id/ch1_mid"
-          id="@+id/ch1_eq_mid"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:padding="30dp"
@@ -234,7 +231,6 @@
         android:layout_weight="1">
         <com.triggertrap.seekarc.SeekArc
           android:id="@+id/ch2_mid"
-          id="@+id/ch2_eq_mid"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:padding="30dp"
@@ -298,7 +294,7 @@
     </LinearLayout>
 
     <LinearLayout
-      android:layout_width="wrap_content"
+      android:layout_width="match_parent"
       android:layout_height="0dip"
       android:layout_weight="1"
       android:orientation="horizontal">
@@ -312,7 +308,6 @@
         android:layout_weight="1">
         <com.triggertrap.seekarc.SeekArc
           android:id="@+id/ch1_low"
-          id="@+id/ch1_eq_low"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:padding="30dp"
@@ -343,7 +338,6 @@
         android:layout_weight="1">
         <com.triggertrap.seekarc.SeekArc
           android:id="@+id/ch2_low"
-          id="@+id/ch2_eq_low"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:padding="30dp"

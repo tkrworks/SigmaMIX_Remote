@@ -1,6 +1,6 @@
 <!--
  *
- * Copylight (C) 2017, Shunichi Yamamoto, tkrworks.net
+ * Copyright (C) 2017, Shunichi Yamamoto, tkrworks.net
  *
  * This file is part of SigmaMIX Remote.
  *
@@ -22,7 +22,7 @@
 -->
 
 <resources>
-  <string name="app_name">Remote</string>
+  <string name="app_name">REMOTE</string>
   <string name="app_title">SigmaMIX Remote</string>
 
   <!-- TODO: Remove or change this placeholder text -->
@@ -41,9 +41,14 @@
     <item>NO EFFECTS</item>
     <item>CH1: PITCH SHIFT</item>
     <item>CH1: LPF</item>
+    <item>CH1: DELAY</item>
+    <item>CH1: LPF DELAY</item>
     <item>CH2: PITCH SHIFT</item>
     <item>CH2: LPF</item>
+    <item>CH2: DELAY</item>
+    <item>CH2: LPF DELAY</item>
     <item>CH1: PITCH SHIFT, CH2: LPF</item>
     <item>CH1: LPF, CH2: PITCH SHIFT</item>
+    <item>CH1: DELAY, CH2: DELAY</item>
   </string-array>
 </resources>

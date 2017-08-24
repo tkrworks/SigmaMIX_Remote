@@ -1,5 +1,5 @@
 /*
- * Copylight (C) 2017, Shunichi Yamamoto, tkrworks.net
+ * Copyright (C) 2017, Shunichi Yamamoto, tkrworks.net
  *
  * This file is part of SigmaMIX Remote.
  *
@@ -52,6 +52,10 @@ public class InputControlFragment extends Fragment {
   private TextView mCh1dB;
   private TextView mCh2dB;
   private Spinner mFxType;
+  private SeekArc mDelayTime;
+  private SeekArc mFeedbackGain;
+  private TextView mDTimeMs;
+  private TextView mFbdB;
 
   private UIUpdateThread mUIUpdateThread;
 
@@ -174,6 +178,59 @@ public class InputControlFragment extends Fragment {
       }
     });
 
+    mDelayTime = (SeekArc) view.findViewById(R.id.delay_time);
+    mDelayTime.setOnSeekArcChangeListener(new OnSeekArcChangeListener() {
+      @Override
+      public void onProgressChanged(SeekArc seekArc, int i, boolean b) {
+        if (!isUpdatingUI) {
+          ((MainActivity) getActivity()).adjustDelayParams(i, mFeedbackGain.getProgress());
+        }
+        setMilliSeconds(mDTimeMs, i, 0, 300);
+      }
+
+      @Override
+      public void onStartTrackingTouch(SeekArc seekArc) {
+
+      }
+
+      @Override
+      public void onStopTrackingTouch(SeekArc seekArc) {
+        if (!isUpdatingUI) {
+          ((MainActivity) getActivity())
+              .adjustDelayParams(mDelayTime.getProgress(), mFeedbackGain.getProgress());
+        }
+        setMilliSeconds(mDTimeMs, mDelayTime.getProgress(), 0, 300);
+      }
+    });
+
+    mFeedbackGain = (SeekArc) view.findViewById(R.id.fb_gain);
+    mFeedbackGain.setOnSeekArcChangeListener(new OnSeekArcChangeListener() {
+      @Override
+      public void onProgressChanged(SeekArc seekArc, int i, boolean b) {
+        if (!isUpdatingUI) {
+          ((MainActivity) getActivity()).adjustDelayParams(mDelayTime.getProgress(), i);
+        }
+        setDecibel2(mFbdB, i, -30, 0);
+      }
+
+      @Override
+      public void onStartTrackingTouch(SeekArc seekArc) {
+
+      }
+
+      @Override
+      public void onStopTrackingTouch(SeekArc seekArc) {
+        if (!isUpdatingUI) {
+          ((MainActivity) getActivity())
+              .adjustDelayParams(mDelayTime.getProgress(), mFeedbackGain.getProgress());
+        }
+        setDecibel2(mFbdB, mFeedbackGain.getProgress(), -30, 0);
+      }
+    });
+
+    mDTimeMs = (TextView) view.findViewById(R.id.delay_msec);
+    mFbdB = (TextView) view.findViewById(R.id.fb_db);
+
     mUIUpdateThread = new UIUpdateThread();
     mUIUpdateThread.start();
   }
@@ -223,6 +280,8 @@ public class InputControlFragment extends Fragment {
               mCh1InputGain.setProgress(((MainActivity) getActivity()).getDspSetting(1));
               mCh2InputGain.setProgress(((MainActivity) getActivity()).getDspSetting(2));
               mFxType.setSelection(((MainActivity) getActivity()).getDspSetting(17));
+              mDelayTime.setProgress(((MainActivity) getActivity()).getDspSetting(19));
+              mFeedbackGain.setProgress(((MainActivity) getActivity()).getDspSetting(18));
 
               mHandler.postDelayed(new Runnable() {
                 @Override

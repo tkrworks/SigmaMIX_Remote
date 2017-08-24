@@ -1,6 +1,6 @@
 <!--
  *
- * Copylight (C) 2017, Shunichi Yamamoto, tkrworks.net
+ * Copyright (C) 2017, Shunichi Yamamoto, tkrworks.net
  *
  * This file is part of SigmaMIX Remote.
  *
@@ -31,14 +31,13 @@
 
   <!-- TODO: Update blank fragment layout -->
   <LinearLayout
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:orientation="vertical"
     android:layout_alignParentTop="true"
     android:layout_alignParentStart="true">
 
     <Space
-      android:id="@+id/space_v0"
       android:layout_width="match_parent"
       android:layout_height="0dip"
       android:layout_weight="0.2"/>
@@ -81,7 +80,7 @@
     </LinearLayout>
 
     <LinearLayout
-      android:layout_width="wrap_content"
+      android:layout_width="match_parent"
       android:layout_height="0dip"
       android:layout_weight="0.6"
       android:orientation="horizontal">
@@ -126,7 +125,6 @@
         android:layout_weight="1">
         <com.triggertrap.seekarc.SeekArc
           android:id="@+id/booth"
-          id="@+id/ch2_eq_high"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:padding="30dp"
@@ -155,7 +153,6 @@
     </LinearLayout>
 
     <Space
-      android:id="@+id/space_v2"
       android:layout_width="match_parent"
       android:layout_height="0dip"
       android:layout_weight="0.1"/>
@@ -197,12 +194,11 @@
     </LinearLayout>
 
     <LinearLayout
-      android:layout_width="wrap_content"
+      android:layout_width="match_parent"
       android:layout_height="0dip"
       android:layout_weight="0.6"
       android:orientation="horizontal">
       <Space
-        android:id="@+id/space6"
         android:layout_width="0dip"
         android:layout_height="match_parent"
         android:layout_weight="0.2"/>
@@ -212,7 +208,6 @@
         android:layout_weight="1">
         <com.triggertrap.seekarc.SeekArc
           android:id="@+id/select"
-          id="@+id/ch1_eq_mid"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:padding="30dp"
@@ -234,7 +229,6 @@
           android:textSize="20sp"/>
       </FrameLayout>
       <Space
-        android:id="@+id/space7"
         android:layout_width="0dip"
         android:layout_height="match_parent"
         android:layout_weight="0.2"/>
@@ -244,7 +238,6 @@
         android:layout_weight="1">
         <com.triggertrap.seekarc.SeekArc
           android:id="@+id/monitor"
-          id="@+id/ch2_eq_mid"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:padding="30dp"
@@ -266,7 +259,6 @@
           android:textSize="20sp"/>
       </FrameLayout>
       <Space
-        android:id="@+id/space8"
         android:layout_width="0dip"
         android:layout_height="match_parent"
         android:layout_weight="0.2"/>

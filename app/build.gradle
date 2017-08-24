@@ -1,6 +1,6 @@
 /*
  *
- * Copylight (C) 2017, Shunichi Yamamoto, tkrworks.net
+ * Copyright (C) 2017, Shunichi Yamamoto, tkrworks.net
  *
  * This file is part of SigmaMIX Remote.
  *
@@ -30,8 +30,8 @@ android {
         applicationId "net.tkrworks.sigmamixremote"
         minSdkVersion 23
         targetSdkVersion 25
-        versionCode 3
-        versionName "0.4"
+        versionCode 4
+        versionName "0.5"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {

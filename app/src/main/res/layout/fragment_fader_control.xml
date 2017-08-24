@@ -1,6 +1,6 @@
 <!--
  *
- * Copylight (C) 2017, Shunichi Yamamoto, tkrworks.net
+ * Copyright (C) 2017, Shunichi Yamamoto, tkrworks.net
  *
  * This file is part of SigmaMIX Remote.
  *
@@ -261,7 +261,7 @@
     </LinearLayout>
 
     <LinearLayout
-      android:layout_width="wrap_content"
+      android:layout_width="match_parent"
       android:layout_height="0dip"
       android:layout_weight="0.7"
       android:orientation="horizontal">
@@ -271,7 +271,6 @@
         android:layout_weight="0.2"/>
       <com.triggertrap.seekarc.SeekArc
         android:id="@+id/if_curve"
-        id="@+id/ch1_eq_high"
         android:layout_width="0dip"
         android:layout_height="wrap_content"
         android:layout_weight="1"
@@ -290,7 +289,6 @@
         android:layout_weight="0.2"/>
       <com.triggertrap.seekarc.SeekArc
         android:id="@+id/xf_curve"
-        id="@+id/ch2_eq_high"
         android:layout_width="0dip"
         android:layout_height="wrap_content"
         android:layout_weight="1"
